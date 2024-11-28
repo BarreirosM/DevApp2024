@@ -2,8 +2,12 @@ import { StyleSheet, Text, View, Pressable, StatusBar, TextInput } from "react-n
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import React, {useState} from 'react';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH } from '../../FirebaseConfig'
 
 export default function TelaLogin() {
+
+  const auth = FIREBASE_AUTH;
 
   const [isFocused, setIsFocused] = useState([false, false]); 
 
@@ -28,6 +32,17 @@ export default function TelaLogin() {
     setIsFocused(prev => [prev[0], false]); 
   }; 
 
+  const signIn = async () => {
+    try {
+      const response = await signInWithEmailAndPassword(auth, login, pass);
+      console.log(response);
+      alert(`Login deu certo ${login} ${pass}`);
+    } catch (error: any) {
+      console.log(error);
+      alert(`Login falhou ${login} ${pass} ${error.message}`);
+    }
+  }
+
   return (
     <View style={styles.container}>
 
@@ -50,7 +65,7 @@ export default function TelaLogin() {
       </TextInput>
 
       <View style={[styles.buttonContainer, styles.loginButton]}>
-        <Pressable style={styles.button} onPress={() => alert('You pressed a button.')}>
+        <Pressable style={styles.button} onPress={signIn}>
           <Text style={styles.buttonLabel}>ENTRAR</Text>
         </Pressable>
       </View>

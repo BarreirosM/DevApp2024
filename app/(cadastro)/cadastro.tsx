@@ -2,8 +2,13 @@ import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView } from "react-
 import React, {useState} from 'react';
 import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH } from '../../FirebaseConfig'
 
-export default function TelaCadastroEba() {
+
+
+export default function TelaCadastro() {
+  const auth = FIREBASE_AUTH;
 
   const [isFocused, setIsFocused] = useState([false, false]); 
 
@@ -67,6 +72,16 @@ export default function TelaCadastroEba() {
     setSndPass(newPass);
   };
 
+  const singUp = async () => {
+    try {
+      const response = await createUserWithEmailAndPassword(auth, email, pass);
+      console.log(response);
+    } catch (error: any) {
+      console.log(error);
+      alert(`Cadastro falhou ${email} ${pass} ${error.message}`);
+    }
+  }
+
   return (
     <View style={styles.container}>
 
@@ -129,14 +144,14 @@ export default function TelaCadastroEba() {
         </Text>
         
         <View style={[styles.addPhoto, styles.photoButton]}>
-          <Pressable style={styles.button} onPress={() => alert('You pressed a button.')}>
+          <Pressable style={styles.button} onPress={() => alert(`${name} ${age} ${email} ${state} ${city} ${address} ${tele} ${userName} ${pass} ${sndPass}`)}>
             <MaterialIcons name="control-point" size={24} color="757575" />
             <Text style={styles.buttonLabel}>adicionar foto</Text>
           </Pressable>
         </View>
 
         <View style={[styles.buttonContainer, styles.loginButton]}>
-          <Pressable style={styles.button} onPress={() => alert(`${name} ${age} ${email} ${state} ${city} ${address} ${tele} ${userName} ${pass} ${sndPass}`)}>
+          <Pressable style={styles.button} onPress={singUp}>
             <Text style={styles.buttonLabel}>FAZER CADASTRO</Text>
           </Pressable>
         </View>

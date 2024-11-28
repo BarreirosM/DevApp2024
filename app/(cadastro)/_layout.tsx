@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import Entypo from '@expo/vector-icons/Entypo';
 import { StyleSheet, Text, View, Pressable } from "react-native";
 
+
 export default function TabLayout() {
   return (
     <Stack screenOptions={({ navigation }) => ({
