@@ -34,7 +34,7 @@ export default function TelaInicial() {
           </Link>
       </View>
       <View style={styles.buttonContainer}>
-        <Link href={"/sem-cadastro"} asChild>
+        <Link href={"/cadastro-animal"} asChild>
           <Pressable style={styles.button}>
             <Text style={styles.buttonLabel}>AJUDAR</Text>
           </Pressable>
@@ -42,7 +42,7 @@ export default function TelaInicial() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Link href={"/sem-cadastro"} asChild>
+        <Link href={"/cadastro-eba"} asChild>
           <Pressable style={styles.button} >
             <Text style={styles.buttonLabel}>CADASTRAR ANIMAL</Text>
           </Pressable>

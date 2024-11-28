@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-export default function TelaCadastroPessoal() {
+export default function TelaCadastroEba() {
 
   const [isFocused, setIsFocused] = useState([false, false]); 
 
@@ -115,9 +115,11 @@ export default function TelaCadastroPessoal() {
         <View style={styles.formContainer}>
           <MyTextInput text={'Nome de usuário'} handleValue={handleUserName}/>
         </View>
+        
         <View style={styles.formContainer}>
           <MyTextInput text={'Senha'} handleValue={handlePass} secret={true}/>
         </View>
+
         <View>
           <MyTextInput text={'Confirmação de senha'} handleValue={handleSndPass} secret={true}/>
         </View>

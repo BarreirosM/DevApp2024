@@ -69,6 +69,20 @@ export default function RootLayout() {
             headerShown: false
           }}
         />
+
+        <Stack.Screen
+          name="(cadastro-eba)" // This is the name of the page and must match the url from root
+          options={{
+            headerShown: false
+          }}
+        />
+
+        <Stack.Screen
+          name="(cadastro-animal)" // This is the name of the page and must match the url from root
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { PixelRatio, StyleSheet, View, Pressable, Text, TextInput, ImageProps} from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 
 type Props = {
   text: string;

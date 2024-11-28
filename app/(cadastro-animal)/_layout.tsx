@@ -4,7 +4,7 @@ export default function TabLayout() {
   return (
     <Stack screenOptions={({ navigation }) => ({
       headerStyle: {
-        backgroundColor: '#cfe9e5',
+        backgroundColor: '#fee29b',
       },
       headerTintColor: '#434343', 
       headerTitleStyle: {
@@ -12,8 +12,8 @@ export default function TabLayout() {
         fontSize: 20,
       },
     })} >
-      <Stack.Screen name="sem-cadastro" options={{ 
-        title: 'Cadastro' }} />
+      <Stack.Screen name="cadastro-animal" options={{ 
+        title: 'Cadastro do Animal' }} />
     </Stack>
   );
 }
