@@ -7,9 +7,9 @@ import { Courgette_400Regular } from '@expo-google-fonts/courgette';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
-import { StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useState } from "react";
-import { Stack } from 'expo-router';
+import { Text, Pressable } from "react-native";
+import { Link } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,60 +31,149 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={({ navigation }) => ({
-        headerStyle: {
-          backgroundColor: '#fafafa',
-        },
-        headerTintColor: '#88c9bf',
-        headerShadowVisible: false, 
-        headerLeft: () => 
-          <Pressable style={{padding: 12}}>
-            <Text>
-              <Entypo name="menu" size={30} color='#88c9bf' />
-            </Text>
-         </Pressable >
-        ,
-      })} >
-        <Stack.Screen
-          name="index" // This is the name of the page and must match the url from root
-          options={{
-            title: '',
+      <Drawer >
+        <Drawer.Screen 
+          name="index" 
+          
+          options={({ navigation }) => ({ 
+            title: 'Home',
+            headerTitle: '',
+            headerStyle: {
+              backgroundColor: '#fafafa',
+            },
             
-          }}
-        />
-        <Stack.Screen
-          name="(login)" // This is the name of the page and must match the url from root
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="(sem-cadastro)" // This is the name of the page and must match the url from root
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="(cadastro)" // This is the name of the page and must match the url from root
-          options={{
-            headerShown: false
-          }}
+            headerTintColor: '#88c9bf',
+            headerShadowVisible: false,
+
+            headerLeft: () => 
+              <Pressable style={{padding: 12}}onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={30} color='#88c9bf' />
+                </Text>
+              </Pressable>
+            ,
+          })}
         />
 
-        <Stack.Screen
-          name="(cadastro-eba)" // This is the name of the page and must match the url from root
-          options={{
-            headerShown: false
-          }}
+        <Drawer.Screen 
+          name="login" 
+
+          options={({ navigation }) => ({ 
+            title: 'Login', 
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+
+            headerTintColor: '#434343',
+
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+              </Pressable>
+            ,
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+        
+        <Drawer.Screen
+          name="cadastro" // This is the name of the page and must match the url from root
+          options={({ navigation }) => ({
+            title: "Cadastro",
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+            headerTintColor: '#434343', 
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+             </Pressable >,
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
         />
 
-        <Stack.Screen
-          name="(cadastro-animal)" // This is the name of the page and must match the url from root
-          options={{
-            headerShown: false
-          }}
+        <Drawer.Screen
+          name="cadastro-animal" // This is the name of the page and must match the url from root
+          options={({ navigation }) => ({
+            title: "Cadastro Animal",
+            headerStyle: {
+              backgroundColor: '#fee29b',
+            },
+            headerTintColor: '#434343', 
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+             </Pressable >,
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
         />
-      </Stack>
+
+        <Drawer.Screen
+          name="sem-cadastro" // This is the name of the page and must match the url from root
+          options={({ navigation }) => ({
+            title: "Cadastro",
+            headerShown: true,
+            drawerItemStyle: { display: 'none' },
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+            headerLeft: () => 
+              <Link href="/" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="arrowleft" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+      
+            headerTintColor: '#434343', 
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+
+        <Drawer.Screen
+          name="cadastro-eba" // This is the name of the page and must match the url from root
+          
+          options={({ navigation }) => ({
+            title: "Cadastro do Animal",
+            drawerItemStyle: { display: 'none' },
+            headerStyle: {
+              backgroundColor: '#fee29b',
+            },
+            headerLeft: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="arrowleft" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+
+            headerTintColor: '#434343', 
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+      </Drawer>
     </GestureHandlerRootView>
   );
 }

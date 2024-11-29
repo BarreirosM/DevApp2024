@@ -4,9 +4,10 @@ import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MyCheckBox from "@/components/MyCheckBox";
 import MyRadioButton from "@/components/MyRadioButton";
+import { Link } from "expo-router";
 
 
-export default function TelaCadastroEba() {
+export default function TelaCadastroAnimal() {
 
   const [doencas, setDoencas] = useState('');
 
@@ -318,11 +319,13 @@ export default function TelaCadastroEba() {
           </View>
 
           <View style={[styles.buttonContainer, {backgroundColor: '#ffd358', alignSelf: "center", marginBottom: 46,}]}>
-            <Pressable style={styles.button} >
-              <Text style={styles.buttonLabel}>
-                COLOCAR PARA ADOÇÃO
-              </Text>
-            </Pressable>
+            <Link href={"/cadastro-eba"}  asChild>
+              <Pressable style={styles.button} >
+                <Text style={styles.buttonLabel}>
+                  COLOCAR PARA ADOÇÃO
+                </Text>
+              </Pressable>
+            </Link>
           </View>
 
         </View>
@@ -385,11 +388,7 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 10,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 1,
+    boxShadow: "0 1 4 grey",
     flexDirection: 'row',
   },
 

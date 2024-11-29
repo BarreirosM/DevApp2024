@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from '../../FirebaseConfig'
+import { FIREBASE_AUTH } from '../FirebaseConfig'
 
 
 
@@ -204,11 +204,7 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 10,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 1,
+    boxShadow: "0 1 4 grey",
   },
 
   addPhoto: {

@@ -14,6 +14,7 @@ export default function MyRadioButton({ label, value, handleValue, secret = fals
   return(
     <View style={styles.radioContainer}>
       <RadioButton
+        color="#f7a800"
         value={label}
         status={ label === value ? 'checked' : 'unchecked' }
         onPress={() => handleValue(label)}

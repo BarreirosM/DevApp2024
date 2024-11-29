@@ -1,34 +1,38 @@
 import { StyleSheet, Text, View, Pressable, StatusBar } from "react-native";
 import { Link } from 'expo-router';
-import React, {useState} from 'react';
 
 export default function TelaSemCadastro() {
 
   return (
     <View style={styles.container}>
 
-      <StatusBar barStyle="light-content" backgroundColor="#ffd358"></StatusBar>
+      <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
 
       <Text style={styles.titleText}>
-        Eba!
+        Ops!
       </Text>
 
       <Text style={[styles.introduction]}>
-        O cadastro do seu pet foi realizado com sucesso!
+        Você não pode realizar esta ação sem possuir um cadastro.
       </Text>
 
-      <Text style={[styles.introduction]}>
-        Certifique-se que permitiu o envio de
-        notificações por push no campo
-        privacidade do menu configurações do
-        aplicativo. Assim, poderemos te avisar
-        assim que alguém interessado entrar
-        em contato!
+      <View style={[styles.buttonContainer, styles.loginButton]}>
+        <Link href={"/cadastro"} asChild>
+          <Pressable style={styles.button} >
+            <Text style={styles.buttonLabel}>
+              FAZER CADASTRO
+            </Text>
+          </Pressable>
+        </Link>
+      </View>
+
+      <Text style={[styles.introduction, {marginTop: 44}]}>
+        Já possui cadastro?
       </Text>
 
-      <View style={[styles.buttonContainer]}>
+      <View style={[styles.buttonContainer, styles.loginButton]}>
         <Link href={"/login"} asChild>
-          <Pressable style={styles.button}>
+          <Pressable style={styles.button} onPress={() => alert("apertou")}>
             <Text style={styles.buttonLabel}>FAZER LOGIN</Text>
           </Pressable>
         </Link>
@@ -49,16 +53,20 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'Courgette_400Regular',
     fontSize: 53,
-    color: "#ffd358",
+    color: "#88c9bf",
     marginTop: 52,
     marginBottom: 52,
+  },
+
+  textBottom: {
+    marginBottom: 48,
   },
 
   introduction: {
     fontFamily: 'Roboto_400Regular',
     fontSize: 14,
     marginBottom: 16,
-    marginHorizontal: 52,
+    marginHorizontal: 50,
     textAlign: 'center',
     color: '#757575'
   },
@@ -66,18 +74,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: 232,
     height: 40,
-    backgroundColor: '#ffd358',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
-    position: 'absolute',
-    bottom: 24,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 1,
+    marginBottom: 12,
+    boxShadow: "0 1 4 grey",
   },
 
   button: {

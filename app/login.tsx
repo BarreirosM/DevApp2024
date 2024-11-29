@@ -3,7 +3,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import React, {useState} from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from '../../FirebaseConfig'
+import { FIREBASE_AUTH } from '../FirebaseConfig'
 
 export default function TelaLogin() {
 
@@ -124,11 +124,7 @@ const styles = StyleSheet.create({
     padding: 3,
     borderRadius: 10,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 1,
+    boxShadow: "0 1 4 grey",
   },
 
   button: {
