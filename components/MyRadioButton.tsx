@@ -6,10 +6,9 @@ type Props = {
   label: string;
   value: string;
   handleValue: (value: string) => void;
-  secret?: boolean;
 };
 
-export default function MyRadioButton({ label, value, handleValue, secret = false }: Props) {
+export default function MyRadioButton({ label, value, handleValue}: Props) {
 
   return(
     <View style={styles.radioContainer}>

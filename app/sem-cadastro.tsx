@@ -32,7 +32,7 @@ export default function TelaSemCadastro() {
 
       <View style={[styles.buttonContainer, styles.loginButton]}>
         <Link href={"/login"} asChild>
-          <Pressable style={styles.button} onPress={() => alert("apertou")}>
+          <Pressable style={styles.button}>
             <Text style={styles.buttonLabel}>FAZER LOGIN</Text>
           </Pressable>
         </Link>

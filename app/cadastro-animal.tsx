@@ -3,61 +3,56 @@ import React, {useState} from 'react';
 import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MyCheckBox from "@/components/MyCheckBox";
-import MyRadioButton from "@/components/MyRadioButton";
 import { Link } from "expo-router";
+import MyRadioButtonRow from "@/components/MyRadioButtonRow";
+import MyCheckBoxRow from "@/components/MyCheckBoxRow";
+import { FIREBASE_DB } from "../FirebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 
 
 export default function TelaCadastroAnimal() {
 
-  const [doencas, setDoencas] = useState('');
+  const [nome, setNome] = useState('');
 
-  const handleDoencas= (newDoencas: string) => {
-    setSpecies(newDoencas);
-  }
-
-  const [text, setText] = useState('');
-
-  const handleText= (newText: string) => {
-    setSpecies(newText);
-  }
-
-  const [species, setSpecies] = useState('');
-
-  const handleSpecies = (newSpecies: string) => {
-    setSpecies(newSpecies)
-  }
-
-  const [sex, setSex] = useState('');
-
-  const handleSex = (newSex: string) => {
-    setSex(newSex)
-  }
-
-  const [size, setSize] = useState('');
-
-  const handleSize = (newSize: string) => {
-    setSize(newSize)
-  }
-
-  const [age, setAge] = useState('');
-
-  const handleAge = (newAge: string) => {
-    setAge(newAge)
-  }
-
-  const [name, setName] = useState('');
-
-  const handleName = (newName: string) => {
-    setName(newName);
+  const handleNome = (newNome: string) => {
+    setNome(newNome);
   };
 
-  const [userName, setUserName] = useState('');
+  let idAux: number = 0;
 
-  const handleUserName = (newUserName: string) => {
-    setUserName(newUserName);
-  };
+  const especies: string[] = ['Cachorro', 'Gato'];
+  const sexos: string[] = ['Macho', 'Fêmea'];
+  const portes: string[] = ['Pequeno', 'Médio', 'Grande'];
+  const idades: string[] = ['Filhote', 'Adulto', 'Idoso'];
+
+  const [especie, setEspecie] = useState('');
+  const [sexo, setSexo] = useState('');
+  const [porte, setPorte] = useState('');
+  const [idade, setIdade] = useState('');
+
+  const handleEspecie = (newEspecie: string) => {
+    setEspecie(newEspecie);
+  }
+
+  const handleSexo = (newSexo: string) => {
+    setSexo(newSexo);
+  }
+
+  const handlePorte = (newPorte: string) => {
+    setPorte(newPorte);
+  }
+
+  const handleIdade = (newIdade: string) => {
+    setIdade(newIdade);
+  }
+
+  const temperamentos1: string[] = ['Brincalhão', 'Tímido', 'Calmo']
+  const temperamentos2: string[] = ['Guarda', 'Amoroso', 'Preguiçoso'];
+  const saudeAux1: string[] = ['Vacinado', 'Vermifugado'];
+  const saudeAux2: string[] = ['Castrado', 'Doente'];
 
   const [temperamento, setTemperamento] = useState([false, false, false, false, false, false]);
+  const [saude, setSaude] = useState([false, false, false, false]);
 
   const handleTemperamento = (myString: string) => {
     switch (myString) {
@@ -89,8 +84,6 @@ export default function TelaCadastroAnimal() {
     }
   }
 
-  const [saude, setSaude] = useState([false, false, false, false]);
-
   const handleSaude = (myString: string) => {
     switch (myString) {
 
@@ -111,6 +104,18 @@ export default function TelaCadastroAnimal() {
         break;
 
     }
+  }
+
+  const [doencas, setDoencas] = useState('');
+
+  const handleDoencas= (newDoencas: string) => {
+    setDoencas(newDoencas);
+  }
+
+  const [texto, setTexto] = useState('');
+
+  const handleTexto= (newTexto: string) => {
+    setTexto(newTexto);
   }
 
   const [exigencias, setExigencias] = useState([false, false, false, false]);
@@ -137,23 +142,71 @@ export default function TelaCadastroAnimal() {
     }
   }
 
+  let acompanhamento: number = 0;
+
   const [tempoAcompanhamento, setTempoAcompanhamento] = useState([false, false, false]);
 
   const handleTempoAcompanhamento= (myString: string) => {
     switch (myString) {
 
       case "1 mês":
+        if (!tempoAcompanhamento[0]) acompanhamento = 1;
+        else acompanhamento = 0;
         setTempoAcompanhamento(prev => [!prev[0], false, false]);
         break;
 
       case "3 meses":
+        if (!tempoAcompanhamento[1]) acompanhamento = 3;
+        else acompanhamento = 0;
         setTempoAcompanhamento(prev => [false, !prev[1], false]);
         break;
 
       case "6 meses":
+        if (!tempoAcompanhamento[2]) acompanhamento = 6;
+        else acompanhamento = 0;
         setTempoAcompanhamento(prev => [false, false, !prev[2]]);
         break;
 
+    }
+  }
+
+  const db = FIREBASE_DB;
+
+  const salvarNuvem = async () => {
+    try {
+      const response = await addDoc(collection(db, "Pets"), {
+        Especie: especie,
+        Exigencias: {
+          Fotos: exigencias[1],
+          Termos: exigencias[0],
+          Visita: exigencias[2],
+        },
+        Acompanhamento: acompanhamento, 
+        Idade: idade,
+        Nome: nome,
+        Porte: porte,
+        Saude: {
+          Castrado: saude[2],
+          Doente: saude[3],
+          Vacinado: saude[0],
+          Vermifugado: saude[1]},
+        Doencas: doencas,
+        Sexo: sexo,
+        Sobre: texto,
+        Temperamento: {
+          Amoroso: temperamento[4],
+          Brincalhao: temperamento[0],
+          Calmo: temperamento[2],
+          Guarda: temperamento[3],
+          Preguiçoso: temperamento[5],
+          Timido: temperamento[1],}
+      })
+      console.log(response);
+      alert(`Salvar deu certo`);
+
+    } catch (error: any) {
+      console.log(error);
+      alert(`Salvar falhou ${error.message}`);
     }
   }
 
@@ -201,7 +254,7 @@ export default function TelaCadastroAnimal() {
         </Text>
 
         <View style={styles.formContainer}>
-          <MyTextInput text={'Nome do animal'} handleValue={handleName}/>
+          <MyTextInput text={'Nome do animal'} handleValue={handleNome}/>
         </View>
 
         <Text style={styles.subSubHeader}>
@@ -219,76 +272,39 @@ export default function TelaCadastroAnimal() {
           ESPÉCIE
         </Text>
 
-        <View style={styles.radioOptionContainer}>
-
-          <MyRadioButton label='Cachorro' value={species} handleValue={handleSpecies}/>
-          
-          <MyRadioButton label='Gato' value={species} handleValue={handleSpecies}/>
-        </View>
+        <MyRadioButtonRow id={idAux++} labels={especies} value={especie} handleValue={handleEspecie}/>
 
         <Text style={styles.subSubHeader}>
           SEXO
         </Text>
 
-        <View style={styles.radioOptionContainer}>
-          <MyRadioButton label='Macho' value={sex} handleValue={handleSex}/>
-
-          <MyRadioButton label='Fêmea' value={sex} handleValue={handleSex}/>
-        </View>
+        <MyRadioButtonRow id={idAux++} labels={sexos} value={sexo} handleValue={handleSexo}/>
 
         <Text style={styles.subSubHeader}>
           PORTE
         </Text>
 
-        <View style={styles.radioOptionContainer}>
-          <MyRadioButton label='Pequeno' value={size} handleValue={handleSize}/>
-
-          <MyRadioButton label='Médio' value={size} handleValue={handleSize}/>
-
-          <MyRadioButton label='Grande' value={size} handleValue={handleSize}/>
-        </View>
+        <MyRadioButtonRow id={idAux++} labels={portes} value={porte} handleValue={handlePorte}/>
 
         <Text style={styles.subSubHeader}>
           IDADE
         </Text>
 
-        <View style={styles.radioOptionContainer}>
-          <MyRadioButton label='Filhote' value={age} handleValue={handleAge}/>
-
-          <MyRadioButton label='Adulto' value={age} handleValue={handleAge}/>
-
-          <MyRadioButton label='Idoso' value={age} handleValue={handleAge}/>
-        </View>
+        <MyRadioButtonRow id={idAux++} labels={idades} value={idade} handleValue={handleIdade}/>
 
         <Text style={styles.subSubHeader}>
           TEMPERAMENTO
         </Text>
-
-        <View style={styles.radioOptionContainer}>
-            <MyCheckBox label="Brincalhão" value={temperamento[0]} handleState={handleTemperamento}/>
-            <MyCheckBox label="Tímido" value={temperamento[1]} handleState={handleTemperamento}/>
-            <MyCheckBox label="Calmo" value={temperamento[2]} handleState={handleTemperamento}/>
-        </View>
-
-        <View style={[styles.radioOptionContainer, {marginTop: 24}]}>
-            <MyCheckBox label="Guarda" value={temperamento[3]} handleState={handleTemperamento}/>
-            <MyCheckBox label="Amoroso" value={temperamento[4]} handleState={handleTemperamento}/>
-            <MyCheckBox label="Preguiçoso" value={temperamento[5]} handleState={handleTemperamento}/>
-        </View>
+        <MyCheckBoxRow id={0} labels={temperamentos1} values={temperamento} handleState={handleTemperamento}/>
+        <MyCheckBoxRow id={3} labels={temperamentos2} values={temperamento} handleState={handleTemperamento}/>
 
         <Text style={styles.subSubHeader}>
           SAÚDE
         </Text>
 
-        <View style={styles.radioOptionContainer}>
-            <MyCheckBox label="Vacinado" value={saude[0]} handleState={handleSaude}/>
-            <MyCheckBox label="Vermifugado" value={saude[1]} handleState={handleSaude}/>
-        </View>
+        <MyCheckBoxRow id={0} labels={saudeAux1} values={saude} handleState={handleSaude}/>
 
-        <View style={[styles.radioOptionContainer, {marginTop: 24}]}>
-          <MyCheckBox label="Castrado" value={saude[2]} handleState={handleSaude}/>
-          <MyCheckBox label="Doente" value={saude[3]} handleState={handleSaude}/>
-        </View>
+        <MyCheckBoxRow id={2} labels={saudeAux2} values={saude} handleState={handleSaude}/>
 
         <View style={styles.formContainer}>
           <MyTextInput text={'Doenças do animal'} handleValue={handleDoencas}/>
@@ -315,12 +331,12 @@ export default function TelaCadastroAnimal() {
           </Text>
 
           <View style={[styles.formContainer, {marginTop: 0, marginBottom: 24,}]}>
-            <MyTextInput text={'Compartilhe a história do animal'} handleValue={handleText}/>
+            <MyTextInput text={'Compartilhe a história do animal'} handleValue={handleTexto}/>
           </View>
 
           <View style={[styles.buttonContainer, {backgroundColor: '#ffd358', alignSelf: "center", marginBottom: 46,}]}>
             <Link href={"/cadastro-eba"}  asChild>
-              <Pressable style={styles.button} >
+              <Pressable style={styles.button} onPressIn={salvarNuvem}>
                 <Text style={styles.buttonLabel}>
                   COLOCAR PARA ADOÇÃO
                 </Text>
@@ -397,11 +413,7 @@ const styles = StyleSheet.create({
     height: 128,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 1,
+    boxShadow: "0 1 4 grey",
   },
 
   radioOptionContainer:{
