@@ -173,6 +173,41 @@ export default function RootLayout() {
             },
           })}
         />
+
+        <Drawer.Screen
+          name="detalhes-pet" // This is the name of the page and must match the url from root
+          options={({ navigation }) => ({
+            title: "Pequi",
+            //drawerItemStyle: { display: 'none' },
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+            headerLeft: () => 
+              <Link href="/" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="arrowleft" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <Entypo name="share" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+
+            headerTintColor: '#434343', 
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+
       </Drawer>
     </GestureHandlerRootView>
   );
