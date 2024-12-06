@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+//Isto é um teste.
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_API_KEY,
