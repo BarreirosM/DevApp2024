@@ -6,8 +6,9 @@ import MyCheckBox from "@/components/MyCheckBox";
 import { Link } from "expo-router";
 import MyRadioButtonRow from "@/components/MyRadioButtonRow";
 import MyCheckBoxRow from "@/components/MyCheckBoxRow";
-import { FIREBASE_DB } from "../FirebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH } from "../FirebaseConfig";
+import { collection, addDoc, doc, DocumentReference, getDocs, updateDoc, arrayUnion } from "firebase/firestore";
+
 
 
 export default function TelaCadastroAnimal() {
@@ -171,42 +172,91 @@ export default function TelaCadastroAnimal() {
   }
 
   const db = FIREBASE_DB;
-
-  const salvarNuvem = async () => {
+  let petId = '';
+  const pegarNuvem = async () => {
     try {
-      const response = await addDoc(collection(db, "Pets"), {
-        Especie: especie,
-        Exigencias: {
-          Fotos: exigencias[1],
-          Termos: exigencias[0],
-          Visita: exigencias[2],
-        },
-        Acompanhamento: acompanhamento, 
-        Idade: idade,
-        Nome: nome,
-        Porte: porte,
-        Saude: {
-          Castrado: saude[2],
-          Doente: saude[3],
-          Vacinado: saude[0],
-          Vermifugado: saude[1]},
-        Doencas: doencas,
-        Sexo: sexo,
-        Sobre: texto,
-        Temperamento: {
-          Amoroso: temperamento[4],
-          Brincalhao: temperamento[0],
-          Calmo: temperamento[2],
-          Guarda: temperamento[3],
-          Preguiçoso: temperamento[5],
-          Timido: temperamento[1],}
-      })
-      console.log(response);
-      alert(`Salvar deu certo`);
+      console.log(FIREBASE_AUTH.currentUser?.uid)
+      const querytest = await getDocs(collection(db, 'Pets'))
 
-    } catch (error: any) {
+      querytest.forEach((doc) => console.log(doc.data()));
+    }
+    catch (error: any) {
       console.log(error);
-      alert(`Salvar falhou ${error.message}`);
+      alert(`Pegarr falhou ${error.message}`);
+    }
+  }
+  const salvarNuvem = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const response = await addDoc(collection(db, "Pets"), {
+          nome: nome,
+          espécie: especie,
+          sexo: sexo,
+          porte: porte,
+          idade: idade,
+          temperamento: {
+            brincalhão: temperamento[0],
+            tímido: temperamento[1],
+            calmo: temperamento[2],
+            guarda: temperamento[3],
+            amoroso: temperamento[4],
+            preguiçoso: temperamento[5],
+          },
+          saude: {
+            vacinado: saude[0],
+            vermifugado: saude[1],
+            castrado: saude[2],
+            doente: saude[3],
+            doenças: doencas,
+          },
+          exigencias: {
+            termosDeAdoção: exigencias[0],
+            fotosDeCasa: exigencias[1],
+            visitaPrévia: exigencias[2],
+            acompanhamentoPósAdoção: exigencias[3],
+            tempoDeAcompanhamento: acompanhamento,
+          },
+          sobreAnimal: texto,
+          donoDoAnimal: doc(db, 'Usuarios', FIREBASE_AUTH.currentUser.uid),
+        })
+        petId = response.id,
+        //console.log(response);
+        alert(`Salvar deu certo`);
+
+        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const respons = await updateDoc(docAux, {
+          regions: arrayUnion(doc(db, 'Pets', petId)),
+        });
+        console.log(respons);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
+    }
+  }
+
+  const atualizarNuvem = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const response = await updateDoc(docAux, {
+          regions: arrayUnion(doc(db, 'Pets', petId)),
+        });
+        console.log(response);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Atualizar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
     }
   }
 
@@ -223,7 +273,7 @@ export default function TelaCadastroAnimal() {
 
         <View style={styles.threeButtons}>
           <View style={[styles.buttonContainer, styles.smallButton, {backgroundColor: '#ffd358'}]}>
-            <Pressable style={styles.button} >
+            <Pressable style={styles.button} onPress={pegarNuvem}>
               <Text style={styles.buttonLabel}>
                 ADOÇÃO
               </Text>
