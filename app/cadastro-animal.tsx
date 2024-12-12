@@ -240,26 +240,6 @@ export default function TelaCadastroAnimal() {
     }
   }
 
-  const atualizarNuvem = async () => {
-    if (FIREBASE_AUTH.currentUser){
-      try {
-        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
-        const response = await updateDoc(docAux, {
-          regions: arrayUnion(doc(db, 'Pets', petId)),
-        });
-        console.log(response);
-        alert(`Atrualizar deu certo`);
-
-      } catch (error: any) {
-        console.log(error);
-        alert(`Atualizar falhou ${error.message}`);
-      }
-    }
-    else {
-      alert("Usuario não está logado.")
-    }
-  }
-
   return (
     <View style={styles.container}>
 
