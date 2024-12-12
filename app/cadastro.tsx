@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
 import { FIREBASE_DB } from "../FirebaseConfig";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+import {Image} from "expo-image"
 
 
 
@@ -109,6 +111,25 @@ export default function TelaCadastro() {
     }
   }
 
+  const [selectedImage, setSelectedImage] = useState< string | undefined > (
+    undefined
+  );
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if(!result.canceled){
+      setSelectedImage(result.assets[0].uri)
+      console.log(result);
+    }
+    else{
+      alert("Imagem Não Selecionada")
+    }
+  }
+
   return (
     <View style={styles.container}>
 
@@ -170,11 +191,19 @@ export default function TelaCadastro() {
           FOTO DE PERFIL
         </Text>
         
-        <View style={[styles.addPhoto, styles.photoButton]}>
-          <Pressable style={styles.button} onPress={() => alert(`${name} ${age} ${email} ${state} ${city} ${address} ${tele} ${userName} ${pass} ${sndPass}`)}>
-            <MaterialIcons name="control-point" size={24} color="757575" />
-            <Text style={styles.buttonLabel}>adicionar foto</Text>
-          </Pressable>
+        <View style={styles.imageConteiner}>
+            {selectedImage ? (
+              <Pressable style={styles.button} onPress={pickImageAsync}>
+                <Image Source={selectedImage}  style={styles.addPhoto}/>
+              </Pressable>
+            ) : (
+                <View style={[styles.addPhoto, styles.photoButton]}>
+                    <Pressable style={styles.button} onPress={pickImageAsync}>
+                        <MaterialIcons name="control-point" size={24} color="#757575" />
+                        <Text style={styles.buttonLabel}>adicionar foto</Text>
+                    </Pressable>
+                </View>
+            )}
         </View>
 
         <View style={[styles.buttonContainer, styles.loginButton]}>
@@ -317,5 +346,11 @@ const styles = StyleSheet.create({
 
   formContainer: {
     marginBottom: 36,
+  },
+
+  imageConteiner:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
