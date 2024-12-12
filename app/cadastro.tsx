@@ -4,6 +4,8 @@ import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
+import { FIREBASE_DB } from "../FirebaseConfig";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 
 
@@ -72,10 +74,35 @@ export default function TelaCadastro() {
     setSndPass(newPass);
   };
 
+  const db = FIREBASE_DB;
+
   const singUp = async () => {
     try {
-      const response = await createUserWithEmailAndPassword(auth, email, pass);
-      console.log(response);
+      const userAuth = await createUserWithEmailAndPassword(auth, email, pass).then( async (userAuth) => {
+        try {
+          const response = await setDoc(doc(db, "Usuarios", userAuth.user.uid), {
+            nome: name,
+            idade: age,
+            apelido: userName,
+            email: email,
+            foto: '',
+            telefone: tele,
+            endereço: {
+              cidade: city,
+              estado: state,
+              endereço: address,
+            },
+            animais: [],
+          })
+          console.log(response);
+          alert(`Salvar deu certo`);
+    
+        } catch (error: any) {
+          console.log(error);
+          alert(`Salvar falhou ${error.message}`);
+        }
+      });
+      console.log(userAuth);
     } catch (error: any) {
       console.log(error);
       alert(`Cadastro falhou ${email} ${pass} ${error.message}`);

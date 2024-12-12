@@ -1,15 +1,8 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import React, {useState} from 'react';
 import { Image } from 'expo-image';
-import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MyCheckBox from "@/components/MyCheckBox";
 import { Link } from "expo-router";
-import MyRadioButtonRow from "@/components/MyRadioButtonRow";
-import MyCheckBoxRow from "@/components/MyCheckBoxRow";
-import { FIREBASE_DB } from "../FirebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-import { Subheader } from "react-native-paper/lib/typescript/components/List/List";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
