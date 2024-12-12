@@ -8,6 +8,7 @@ import { FIREBASE_DB } from "../FirebaseConfig";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import * as ImagePicker from "expo-image-picker";
 import {Image} from "expo-image"
+import * as FileSystem from 'expo-file-system';
 
 
 
@@ -87,7 +88,7 @@ export default function TelaCadastro() {
             idade: age,
             apelido: userName,
             email: email,
-            foto: '',
+            foto: imagemBase64,
             telefone: tele,
             endereço: {
               cidade: city,
@@ -115,20 +116,24 @@ export default function TelaCadastro() {
     undefined
   );
 
+
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       quality: 1,
     });
 
-    if(!result.canceled){
-      setSelectedImage(result.assets[0].uri)
-      console.log(result);
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setSelectedImage(uri);
+      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      setImagemBase64(`data:image/jpeg;base64,${base64}`);
+    } else {
+      alert("Imagem Não Selecionada");
     }
-    else{
-      alert("Imagem Não Selecionada")
-    }
-  }
+  };
+
+  const [imagemBase64, setImagemBase64] = useState<string | null>(null);
 
   return (
     <View style={styles.container}>
@@ -190,20 +195,20 @@ export default function TelaCadastro() {
         <Text style={styles.subHeader}>
           FOTO DE PERFIL
         </Text>
-        
+
         <View style={styles.imageConteiner}>
-            {selectedImage ? (
+          {imagemBase64 ? (
+            <Pressable style={styles.button} onPress={pickImageAsync}>
+              <Image source={{ uri: imagemBase64 }} style={styles.addPhoto} />
+            </Pressable>
+          ) : (
+            <View style={[styles.addPhoto, styles.photoButton]}>
               <Pressable style={styles.button} onPress={pickImageAsync}>
-                <Image Source={selectedImage}  style={styles.addPhoto}/>
+                <MaterialIcons name="control-point" size={24} color="#757575" />
+                <Text style={styles.buttonLabel}>adicionar foto</Text>
               </Pressable>
-            ) : (
-                <View style={[styles.addPhoto, styles.photoButton]}>
-                    <Pressable style={styles.button} onPress={pickImageAsync}>
-                        <MaterialIcons name="control-point" size={24} color="#757575" />
-                        <Text style={styles.buttonLabel}>adicionar foto</Text>
-                    </Pressable>
-                </View>
-            )}
+            </View>
+          )}
         </View>
 
         <View style={[styles.buttonContainer, styles.loginButton]}>
