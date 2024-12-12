@@ -225,7 +225,7 @@ export default function TelaCadastroAnimal() {
 
         const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
         const respons = await updateDoc(docAux, {
-          regions: arrayUnion(doc(db, 'Pets', petId)),
+          animais: arrayUnion(doc(db, 'Pets', petId)),
         });
         console.log(respons);
         alert(`Atrualizar deu certo`);
