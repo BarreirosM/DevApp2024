@@ -75,7 +75,6 @@ export default function TelaCadastro() {
   };
 
   const db = FIREBASE_DB;
-  let userID: string = '';
 
   const singUp = async () => {
     try {
@@ -107,30 +106,6 @@ export default function TelaCadastro() {
     } catch (error: any) {
       console.log(error);
       alert(`Cadastro falhou ${email} ${pass} ${error.message}`);
-    }
-  }
-
-  const salvarNuvem = async () => {
-    try {
-      const response = await addDoc(collection(db, "Usuarios", userID), {
-        nome: name,
-        idade: age,
-        apelido: userName,
-        email: email,
-        foto: '',
-        telefone: tele,
-        endereço: {
-          cidade: city,
-          estado: state,
-          endereço: address,
-        },
-      })
-      console.log(response);
-      alert(`Salvar deu certo`);
-
-    } catch (error: any) {
-      console.log(error);
-      alert(`Salvar falhou ${error.message}`);
     }
   }
 
