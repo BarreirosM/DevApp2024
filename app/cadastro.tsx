@@ -10,7 +10,6 @@ import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 
 export default function TelaCadastro() {
-  const auth = FIREBASE_AUTH;
 
   const [isFocused, setIsFocused] = useState([false, false]); 
 
@@ -74,6 +73,7 @@ export default function TelaCadastro() {
     setSndPass(newPass);
   };
 
+  const auth = FIREBASE_AUTH;
   const db = FIREBASE_DB;
 
   const singUp = async () => {
