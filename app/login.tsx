@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, TextInput } from "react-native";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
 
@@ -34,7 +34,10 @@ export default function TelaLogin() {
 
   const signIn = async () => {
     try {
+      console.log(auth);
       const response = await signInWithEmailAndPassword(auth, login, pass);
+      console.log(auth);
+      console.log(response.user.uid)
       console.log(response);
       alert(`Login deu certo ${login} ${pass}`);
     } catch (error: any) {
@@ -42,7 +45,25 @@ export default function TelaLogin() {
       alert(`Login falhou ${login} ${pass} ${error.message}`);
     }
   }
+  if (auth.currentUser) {
+    return (
+      <View style={styles.container}>
 
+      <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
+
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.titleText}>
+          Opa!
+        </Text>
+
+        <Text style={[styles.introduction]}>
+          Você já está logado no app.
+        </Text>
+      </View>
+
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
 
@@ -99,7 +120,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'Courgette_400Regular',
     fontSize: 72,
-    color: "#ffd358",
+    color: "#88c9bf",
     marginTop: 18,
     marginBottom: 52,
   },

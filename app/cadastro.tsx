@@ -4,11 +4,15 @@ import MyTextInput from "@/components/MyTextInput";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
+import { FIREBASE_DB } from "../FirebaseConfig";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+import {Image} from "expo-image"
+import * as FileSystem from 'expo-file-system';
 
 
 
 export default function TelaCadastro() {
-  const auth = FIREBASE_AUTH;
 
   const [isFocused, setIsFocused] = useState([false, false]); 
 
@@ -72,15 +76,64 @@ export default function TelaCadastro() {
     setSndPass(newPass);
   };
 
+  const auth = FIREBASE_AUTH;
+  const db = FIREBASE_DB;
+
   const singUp = async () => {
     try {
-      const response = await createUserWithEmailAndPassword(auth, email, pass);
-      console.log(response);
+      const userAuth = await createUserWithEmailAndPassword(auth, email, pass).then( async (userAuth) => {
+        try {
+          const response = await setDoc(doc(db, "Usuarios", userAuth.user.uid), {
+            nome: name,
+            idade: age,
+            apelido: userName,
+            email: email,
+            foto: imagemBase64,
+            telefone: tele,
+            endereço: {
+              cidade: city,
+              estado: state,
+              endereço: address,
+            },
+            animais: [],
+          })
+          console.log(response);
+          alert(`Salvar deu certo`);
+    
+        } catch (error: any) {
+          console.log(error);
+          alert(`Salvar falhou ${error.message}`);
+        }
+      });
+      console.log(userAuth);
     } catch (error: any) {
       console.log(error);
       alert(`Cadastro falhou ${email} ${pass} ${error.message}`);
     }
   }
+
+  const [selectedImage, setSelectedImage] = useState< string | undefined > (
+    undefined
+  );
+
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setSelectedImage(uri);
+      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      setImagemBase64(`data:image/jpeg;base64,${base64}`);
+    } else {
+      alert("Imagem Não Selecionada");
+    }
+  };
+
+  const [imagemBase64, setImagemBase64] = useState<string | null>(null);
 
   return (
     <View style={styles.container}>
@@ -142,12 +195,20 @@ export default function TelaCadastro() {
         <Text style={styles.subHeader}>
           FOTO DE PERFIL
         </Text>
-        
-        <View style={[styles.addPhoto, styles.photoButton]}>
-          <Pressable style={styles.button} onPress={() => alert(`${name} ${age} ${email} ${state} ${city} ${address} ${tele} ${userName} ${pass} ${sndPass}`)}>
-            <MaterialIcons name="control-point" size={24} color="757575" />
-            <Text style={styles.buttonLabel}>adicionar foto</Text>
-          </Pressable>
+
+        <View style={styles.imageConteiner}>
+          {imagemBase64 ? (
+            <Pressable style={styles.button} onPress={pickImageAsync}>
+              <Image source={{ uri: imagemBase64 }} style={styles.addPhoto} />
+            </Pressable>
+          ) : (
+            <View style={[styles.addPhoto, styles.photoButton]}>
+              <Pressable style={styles.button} onPress={pickImageAsync}>
+                <MaterialIcons name="control-point" size={24} color="#757575" />
+                <Text style={styles.buttonLabel}>adicionar foto</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
 
         <View style={[styles.buttonContainer, styles.loginButton]}>
@@ -290,5 +351,11 @@ const styles = StyleSheet.create({
 
   formContainer: {
     marginBottom: 36,
+  },
+
+  imageConteiner:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

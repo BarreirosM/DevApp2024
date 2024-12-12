@@ -6,8 +6,12 @@ import MyCheckBox from "@/components/MyCheckBox";
 import { Link } from "expo-router";
 import MyRadioButtonRow from "@/components/MyRadioButtonRow";
 import MyCheckBoxRow from "@/components/MyCheckBoxRow";
-import { FIREBASE_DB } from "../FirebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH } from "../FirebaseConfig";
+import { collection, addDoc, doc, DocumentReference, getDocs, updateDoc, arrayUnion } from "firebase/firestore";
+import * as ImagePicker from "expo-image-picker";
+import {Image} from "expo-image"
+import * as FileSystem from 'expo-file-system';
+
 
 
 export default function TelaCadastroAnimal() {
@@ -171,44 +175,87 @@ export default function TelaCadastroAnimal() {
   }
 
   const db = FIREBASE_DB;
+  let petId = '';
 
   const salvarNuvem = async () => {
-    try {
-      const response = await addDoc(collection(db, "Pets"), {
-        Especie: especie,
-        Exigencias: {
-          Fotos: exigencias[1],
-          Termos: exigencias[0],
-          Visita: exigencias[2],
-        },
-        Acompanhamento: acompanhamento, 
-        Idade: idade,
-        Nome: nome,
-        Porte: porte,
-        Saude: {
-          Castrado: saude[2],
-          Doente: saude[3],
-          Vacinado: saude[0],
-          Vermifugado: saude[1]},
-        Doencas: doencas,
-        Sexo: sexo,
-        Sobre: texto,
-        Temperamento: {
-          Amoroso: temperamento[4],
-          Brincalhao: temperamento[0],
-          Calmo: temperamento[2],
-          Guarda: temperamento[3],
-          Preguiçoso: temperamento[5],
-          Timido: temperamento[1],}
-      })
-      console.log(response);
-      alert(`Salvar deu certo`);
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const response = await addDoc(collection(db, "Pets"), {
+          nome: nome,
+          espécie: especie,
+          fotoAnimal: imagemBase64,
+          sexo: sexo,
+          porte: porte,
+          idade: idade,
+          temperamento: {
+            brincalhão: temperamento[0],
+            tímido: temperamento[1],
+            calmo: temperamento[2],
+            guarda: temperamento[3],
+            amoroso: temperamento[4],
+            preguiçoso: temperamento[5],
+          },
+          saude: {
+            vacinado: saude[0],
+            vermifugado: saude[1],
+            castrado: saude[2],
+            doente: saude[3],
+            doenças: doencas,
+          },
+          exigencias: {
+            termosDeAdoção: exigencias[0],
+            fotosDeCasa: exigencias[1],
+            visitaPrévia: exigencias[2],
+            acompanhamentoPósAdoção: exigencias[3],
+            tempoDeAcompanhamento: acompanhamento,
+          },
+          sobreAnimal: texto,
+          donoDoAnimal: doc(db, 'Usuarios', FIREBASE_AUTH.currentUser.uid),
+        })
+        petId = response.id,
+        //console.log(response);
+        alert(`Salvar deu certo`);
 
-    } catch (error: any) {
-      console.log(error);
-      alert(`Salvar falhou ${error.message}`);
+        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const respons = await updateDoc(docAux, {
+          animais: arrayUnion(doc(db, 'Pets', petId)),
+        });
+        console.log(respons);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
     }
   }
+
+  const [selectedImage, setSelectedImage] = useState< string | undefined > (
+    undefined
+  );
+
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setSelectedImage(uri);
+      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      setImagemBase64(`data:image/jpeg;base64,${base64}`);
+    } else {
+      alert("Imagem Não Selecionada");
+    }
+  };
+
+  const [imagemBase64, setImagemBase64] = useState<string | null>(null);
+
 
   return (
     <View style={styles.container}>
@@ -223,7 +270,7 @@ export default function TelaCadastroAnimal() {
 
         <View style={styles.threeButtons}>
           <View style={[styles.buttonContainer, styles.smallButton, {backgroundColor: '#ffd358'}]}>
-            <Pressable style={styles.button} >
+            <Pressable style={styles.button}>
               <Text style={styles.buttonLabel}>
                 ADOÇÃO
               </Text>
@@ -261,11 +308,19 @@ export default function TelaCadastroAnimal() {
           FOTOS DO ANIMAL
         </Text>
 
-        <View style={[styles.addPhoto, styles.photoButton, { marginTop: 16}]}>
-          <Pressable style={styles.button} onPress={() => alert('You pressed a button.')}>
-            <MaterialIcons name="control-point" size={24} color="#757575" />
-            <Text style={[styles.buttonLabel, { color: '#757575'}]}>adicionar foto</Text>
-          </Pressable>
+        <View style={styles.imageConteiner}>
+          {imagemBase64 ? (
+            <Pressable style={styles.button} onPress={pickImageAsync}>
+              <Image source={{ uri: imagemBase64 }} style={styles.addPhoto} />
+            </Pressable>
+          ) : (
+            <View style={[styles.addPhoto, styles.photoButton, {marginTop: 16}]}>
+              <Pressable style={styles.button} onPress={pickImageAsync}>
+                <MaterialIcons name="control-point" size={24} color="#757575" />
+                <Text style={[styles.buttonLabel, { color: '#757575'}]}>adicionar foto</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
 
         <Text style={styles.subSubHeader}>
@@ -449,5 +504,11 @@ const styles = StyleSheet.create({
 
   formContainer: {
     marginTop: 20,
+  },
+
+  imageConteiner:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

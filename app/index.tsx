@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View, Pressable, StatusBar } from "react-native";
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
+import { FIREBASE_AUTH } from "@/FirebaseConfig";
+import {useState} from 'react';
 
 const LogoImage = require('@/assets/images/meau-marca.png');
 
 export default function TelaInicial() {
+
+  const [isAuth, setIsAuth] = useState(FIREBASE_AUTH.currentUser);
+
   return (
     
     <View style={styles.container}>
@@ -27,23 +32,23 @@ export default function TelaInicial() {
       </Text>
 
       <View style={styles.buttonContainer}>
-        <Link href={"/sem-cadastro"} asChild>
-          <Pressable style={styles.button}>
+        <Link href={isAuth ? "/cadastro-eba" : "/sem-cadastro"} asChild>
+          <Pressable style={styles.button} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
             <Text style={styles.buttonLabel}>ADOTAR</Text>
           </Pressable>
         </Link>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Link href={"/sem-cadastro"} asChild>
-          <Pressable style={styles.button}>
+        <Link href={isAuth ? "/cadastro-eba" : "/sem-cadastro"} asChild>
+          <Pressable style={styles.button} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
             <Text style={styles.buttonLabel}>AJUDAR</Text>
           </Pressable>
         </Link>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Link href={"/cadastro-animal"} asChild>
+        <Link href={isAuth ? "/cadastro-animal" : "/sem-cadastro"} asChild onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
           <Pressable style={styles.button} >
             <Text style={styles.buttonLabel}>CADASTRAR ANIMAL</Text>
           </Pressable>
@@ -52,7 +57,7 @@ export default function TelaInicial() {
       
 
       <View style={styles.loginButton}>
-        <Link href="/login" style={styles.loginText}>
+        <Link href={"/login"} style={styles.loginText}>
           login
         </Link>
       </View>
