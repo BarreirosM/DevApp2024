@@ -97,7 +97,6 @@ export default function TelaCadastro() {
             },
             animais: [],
           })
-          console.log(response);
           alert(`Salvar deu certo`);
     
         } catch (error: any) {
@@ -105,7 +104,6 @@ export default function TelaCadastro() {
           alert(`Salvar falhou ${error.message}`);
         }
       });
-      console.log(userAuth);
     } catch (error: any) {
       console.log(error);
       alert(`Cadastro falhou ${email} ${pass} ${error.message}`);

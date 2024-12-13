@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
+import { collection, DocumentData, getDocs } from 'firebase/firestore';
+import { FIREBASE_DB } from '@/FirebaseConfig';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -9,46 +11,51 @@ const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 type Props = {
   id: string;
+  nome: string;
+  idade: string;
+  porte: string;
+  sexo:string;
+  foto: string;
 };
 
-export default function MyPost({ id }: Props) {
-
+export default function MyPost({ id, nome, idade, porte, sexo, foto }: Props) {
+  
   return(
     <Pressable style={styles.postContainer}>
-          <View style={styles.postHeader}>
-            <Text style={styles.nomeAnimal}>
-              Pequi
-            </Text>
-            <View style={styles.favoriteIcon}>
-              <MaterialIcons name="favorite-border" size={24} color="#434343" />
-            </View>
+        <View style={styles.postHeader}>
+          <Text style={styles.nomeAnimal}>
+            {nome}
+          </Text>
+          <View style={styles.favoriteIcon}>
+            <MaterialIcons name="favorite-border" size={24} color="#434343" />
           </View>
-          <Image source={PlaceholderImage} style={styles.image} contentFit="cover"/>
-          
-          <View style={styles.rowText}>
-
-            <Text style={styles.regularText}>
-              MACHO
-            </Text>
-
-            <Text style={styles.regularText}>
-              ADULTO
-            </Text>
-
-            <Text style={styles.regularText}>
-              MÉDIO
-            </Text>
-
-          </View>
-
-          <View style={styles.rowText}>
-            <Text style={styles.regularText}>
-              SAMAMBAIA SUL - DISTRITO FEDERAL
-            </Text>
-          </View>
-
-        </Pressable>
-  );
+        </View>
+        <Image source={{ uri: foto }} style={styles.image} contentFit="cover"/>
+        
+        <View style={styles.rowText}>
+  
+          <Text style={styles.regularText}>
+            {sexo}
+          </Text>
+  
+          <Text style={styles.regularText}>
+            {idade}
+          </Text>
+  
+          <Text style={styles.regularText}>
+            {porte}
+          </Text>
+  
+        </View>
+  
+        <View style={styles.rowText}>
+          <Text style={styles.regularText}>
+            SAMAMBAIA SUL - DISTRITO FEDERAL
+          </Text>
+        </View>
+  
+      </Pressable>
+      )
 }
 
 const styles = StyleSheet.create({
