@@ -1,30 +1,79 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
-import React, {useState} from 'react';
+import { useEffect, useState } from 'react';
+import MyPost from "@/components/MyPost";
+import { collection, doc, getDoc, getDocFromServer, getDocs, getDocsFromServer } from "firebase/firestore";
+import { FIREBASE_DB } from "@/FirebaseConfig";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from "expo-router";
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
+
+const db = FIREBASE_DB;
 
 export default function TelaDetalhesPet() {
 
-  const nome: string = "Pequi";
-  const sexo: string = "Macho";
-  const porte: string = "Pequeno";
-  const idade: string = "Adulto";
+  const local = useLocalSearchParams();
+  const petId = String(local["pets-adotar"]);
+  const [petData, setPetData] = useState<any>({
+    nome: 'Erro',
+    sexo: 'Erro',
+    porte: 'Erro',
+    idade: 'Erro',
+    saude: {
+      castrado: 'Erro',
+      vermifugado: 'Erro',
+      vacinado: 'Erro',
+      doente: 'Erro',
+      doenças: 'Erro',
+    },
+    temperamento: {
+      amoroso: 'Erro',
+      brincalhão: 'Erro',
+      calmo: 'Erro',
+      guarda: 'Erro',
+      preguiçoso: 'Erro',
+      tímido: 'Erro',
+    },
+    sobreAnimal: 'Erro',
+    fotoAnimal: '',
+    exigencias: {
+      acompanhamentoPósAdoção: false,
+      fotosDeCasa: false,
+      tempoDeAcompanhamento: 0,
+      termosDeAdoção: false,
+      visitaPrévia: false,
+    }
+  });
+  
+  useEffect (() => {
+    async function fetchPet() {
+      const docRef = doc(db, "Pets", petId)
+      const docSnap = await getDoc(docRef);
+      setPetData(docSnap.data());
+    }
+    fetchPet();
+  }, []);
+
+
+  const nome: string = petData.nome || 'Erro';
+  const sexo: string = petData.sexo;
+  const porte: string = petData.porte;
+  const idade: string = petData.idade;
   const localizacao: string = "Planaltina – Brasília";
-  const castrado: boolean = false;
-  const vermifugado: boolean = true;
-  const vacinado: boolean = false;
-  const doente: boolean = false;
-  const doencas: string = "Alguma Coisa";
-  const temperamento: boolean[] = [true, false, true, false, false, false];
-  const ajuda: string = "Ajufa financeira e alimento";
-  const exigencias: string = "Termo de apadrinhamento, auxílio financeiro com alimentação";
-  const sobre: string = "Pequi é um cão muito dócil e de fácil convivência. Adora caminhadas e se dá muito bem com crianças. Tem muito medo de raios e chuva. Está disponível para adoção pois eu e minha família o encontramos na rua e não podemos mantê-lo em nossa casa.";
-  const temperamentoAux: string[] = ["Brincalhão" , "Tímdo", "Calmo", "Guarda", "Amoroso", "Preguiçoso"]
+  const castrado: boolean = petData.saude.castrado;
+  const vermifugado: boolean = petData.saude.vermifugado;
+  const vacinado: boolean = petData.saude.vacinado;
+  const doente: boolean = petData.saude.doente;
+  const doencas: string = petData.saude.doenças;
+  const temperamento: boolean[] = [petData.temperamento.amoroso, petData.temperamento.brincalhão, petData.temperamento.calmo, petData.temperamento.guarda, petData.temperamento.preguiçoso, petData.temperamento.tímido];
+  const ajuda: string = "Ajuda financeira e alimento";
+  let exigencias: string = ``;
+  const sobre: string = petData.sobreAnimal;
+  const temperamentoAux: string[] = ["Amoroso", "Brincalhão", "Calmo", "Guarda", "Preguiçoso", "Tímdo"]
+  const exigenciasAux: string[] = ["Acompanhamento pós adoção", "Fotos de casa", "Tempo de acompanhamento", "Termos de Adoção", "Visita prévia"]
 
   let temperamentoString: string = '';
 
@@ -32,17 +81,23 @@ export default function TelaDetalhesPet() {
     temperamentoString = temperamento[i] ? (temperamentoString +`${temperamentoAux[i]} `) : (temperamentoString + '');
   }
 
+  let exigenciasString: string = '';
+
+  exigencias += petData.exigencias.acompanhamentoPósAdoção ? `Acompanhamento pós adoção por ${petData.exigencias.tempoDeAcompanhamento}. ` : '';
+  exigencias += petData.exigencias.fotosDeCasa ? 'Fotos de casa. ' : '';
+  exigencias += petData.exigencias.termosDeAdoção ? 'Termos de adoção. ' : '';
+  exigencias += petData.exigencias.visitaPrévia ? 'Visita prévia. ' : '';
 
   return (
     <View style={styles.container}>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         
-      <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
+      <StatusBar barStyle="light-content" backgroundColor="ffee29b"></StatusBar>
 
       <View style={styles.imageContainer}>
      
-        <Image source={PlaceholderImage} style={styles.image} contentFit="cover"/>
+        <Image source={petData.fotoAnimal ? petData.fotoAnimal : PlaceholderImage} style={styles.image} contentFit="cover"/>
         
         <View style={[styles.editButton]}>
           <Link href={"/cadastro"} asChild>
@@ -170,7 +225,7 @@ export default function TelaDetalhesPet() {
         borderTopWidth: 0.8,}}/>
 
       <Text style={styles.subSubHeader}>
-        O PEQUI PRECISA DE
+        O {nome.toUpperCase()} PRECISA DE
       </Text>
 
       <Text style={styles.regularText}>
@@ -207,21 +262,12 @@ export default function TelaDetalhesPet() {
         {sobre}
       </Text>
       
-      <View style={styles.rowButtons}>
-        <View style={[styles.buttonContainer, ]}>
-          <Pressable style={styles.button} >
-            <Text style={styles.buttonLabel}>
-              VER INTERESSADOS
-            </Text>
-          </Pressable>
-        </View>
-        <View style={[styles.buttonContainer, ]}>
-          <Pressable style={styles.button} >
-            <Text style={styles.buttonLabel}>
-              REMOVER PET
-            </Text>
-          </Pressable>
-        </View>
+      <View style={[styles.buttonContainer, ]}>
+        <Pressable style={styles.button} >
+          <Text style={styles.buttonLabel}>
+            PRETENDO ADOTAR
+          </Text>
+        </Pressable>
       </View>
     
       </ScrollView>
@@ -280,7 +326,7 @@ const styles = StyleSheet.create({
   subSubHeader: {
     fontFamily: 'Roboto_400Regular',
     fontSize: 12,
-    color: "#589b9b",
+    color: "#f7a800",
     marginTop: 16,
     marginLeft: 16,
     //marginBottom: 16,
@@ -314,8 +360,8 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     marginVertical: 28,
-    backgroundColor: "#88c9bf",
-    width: 142,
+    backgroundColor: "#FDCF58",
+    width: 232,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',

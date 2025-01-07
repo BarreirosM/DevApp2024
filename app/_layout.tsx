@@ -8,12 +8,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Text, Pressable } from "react-native";
-import { Link } from 'expo-router';
+import { Link, useGlobalSearchParams, useLocalSearchParams } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const glob = useGlobalSearchParams();
 
   const [loaded, error] = useFonts({
     Roboto_500Medium, Roboto_400Regular, Courgette_400Regular
@@ -201,6 +202,37 @@ export default function RootLayout() {
               </Link>,
 
             headerTintColor: '#434343', 
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+
+<Drawer.Screen
+          name="pets-adocao" // This is the name of the page and must match the url from root
+          options={glob["pets-adotar"] ? {headerShown: false}  :({ navigation }) => ({
+            title: "Adotar",
+            headerStyle: {
+              backgroundColor: '#fee29b',
+            },
+            headerTintColor: '#434343', 
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+             </Pressable >,
+
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="search1" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+
             headerTitleStyle: {
               fontFamily: 'Roboto_500Medium',
               fontSize: 20,

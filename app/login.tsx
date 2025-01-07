@@ -34,11 +34,7 @@ export default function TelaLogin() {
 
   const signIn = async () => {
     try {
-      console.log(auth);
       const response = await signInWithEmailAndPassword(auth, login, pass);
-      console.log(auth);
-      console.log(response.user.uid)
-      console.log(response);
       alert(`Login deu certo ${login} ${pass}`);
     } catch (error: any) {
       console.log(error);

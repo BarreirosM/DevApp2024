@@ -220,7 +220,7 @@ export default function TelaCadastroAnimal() {
         const respons = await updateDoc(docAux, {
           animais: arrayUnion(doc(db, 'Pets', petId)),
         });
-        console.log(respons);
+        //console.log(respons);
         alert(`Atrualizar deu certo`);
 
       } catch (error: any) {
