@@ -1,18 +1,15 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
 import MyPost from "@/components/MyPost";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { FIREBASE_DB } from "@/FirebaseConfig";
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 const db = FIREBASE_DB;
 
 async function fetchData() {
-  const data: any[] = [];
+  const data: {id: string}[] = [];
   const querySnapshot = await getDocs(collection(db, "Pets"));
   querySnapshot.forEach((doc) => {
     data.push({id: doc.id, ...doc.data()});
@@ -20,8 +17,9 @@ async function fetchData() {
   return data;
 }
 
-export default function TelaCadastroAnimal() {
-  const [userData, setUserData] = useState([]);
+export default function TelaAdotarAnimal() {
+
+  const [userData, setUserData] = useState<any>([]);
   useEffect (() => {
     async function fetchPet() {
       const data = await fetchData();
@@ -36,13 +34,33 @@ export default function TelaCadastroAnimal() {
       <StatusBar barStyle="light-content" backgroundColor="#ffd358"></StatusBar>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
-        {userData.map((user) => (
-          <MyPost key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal}/>
+        {userData.map((user: any) => (
+          <MyPost key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal} />
       ))}
     </ScrollView>
   </View>
   );
+  }
+
+  /**
+export default function Route() {
+  const glob = useGlobalSearchParams();
+  const local = useLocalSearchParams();
+
+  console.log("Local:", local["pets-adocao"], "Global:", glob["pets-adocao"]);
+
+  return (
+    <View>
+      <Text>User: {local.pets}</Text>
+      {friends.map(friend => (
+        <Link key={friend} href={`/${friend}`}>
+          Visit {friend}
+        </Link>
+      ))}
+    </View>
+  );
 }
+*/
 
 const styles = StyleSheet.create({
   container: {

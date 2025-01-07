@@ -8,12 +8,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Text, Pressable } from "react-native";
-import { Link } from 'expo-router';
+import { Link, useGlobalSearchParams, useLocalSearchParams } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const glob = useGlobalSearchParams();
 
   const [loaded, error] = useFonts({
     Roboto_500Medium, Roboto_400Regular, Courgette_400Regular
@@ -208,9 +209,9 @@ export default function RootLayout() {
           })}
         />
 
-        <Drawer.Screen
-          name="tela-de-adocao" // This is the name of the page and must match the url from root
-          options={({ navigation }) => ({
+<Drawer.Screen
+          name="pets-adocao" // This is the name of the page and must match the url from root
+          options={glob["pets-adotar"] ? {headerShown: false}  :({ navigation }) => ({
             title: "Adotar",
             headerStyle: {
               backgroundColor: '#fee29b',

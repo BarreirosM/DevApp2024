@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
-import { collection, DocumentData, getDocs } from 'firebase/firestore';
-import { FIREBASE_DB } from '@/FirebaseConfig';
+import { Link, Redirect } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,40 +20,44 @@ type Props = {
 export default function MyPost({ id, nome, idade, porte, sexo, foto }: Props) {
   
   return(
-    <Pressable style={styles.postContainer}>
+    <Link href={`/pets-adocao/${id}?nome=${nome}`} asChild>
+      <Pressable style={styles.postContainer}>
         <View style={styles.postHeader}>
           <Text style={styles.nomeAnimal}>
             {nome}
           </Text>
-          <View style={styles.favoriteIcon}>
-            <MaterialIcons name="favorite-border" size={24} color="#434343" />
-          </View>
+          <Pressable onPress={() => alert('vc favoritou')}>
+            <View style={styles.favoriteIcon}>
+              <MaterialIcons name="favorite-border" size={24} color="#434343" />
+            </View>
+          </Pressable>
         </View>
         <Image source={{ uri: foto }} style={styles.image} contentFit="cover"/>
         
         <View style={styles.rowText}>
-  
+
           <Text style={styles.regularText}>
             {sexo}
           </Text>
-  
+
           <Text style={styles.regularText}>
             {idade}
           </Text>
-  
+
           <Text style={styles.regularText}>
             {porte}
           </Text>
-  
+
         </View>
-  
+
         <View style={styles.rowText}>
           <Text style={styles.regularText}>
             SAMAMBAIA SUL - DISTRITO FEDERAL
           </Text>
         </View>
-  
+
       </Pressable>
+    </Link>
       )
 }
 
