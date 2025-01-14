@@ -1,9 +1,8 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
-import MyPost from "@/components/MyPost";
-import { collection, doc, getDoc, getDocFromServer, getDocs, getDocsFromServer } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { FIREBASE_DB } from "@/FirebaseConfig";
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from "expo-router";

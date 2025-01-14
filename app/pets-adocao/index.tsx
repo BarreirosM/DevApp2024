@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, View, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
 import MyPost from "@/components/MyPost";
 import { collection, getDocs } from "firebase/firestore";

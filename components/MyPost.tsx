@@ -1,12 +1,9 @@
-import React, {useState} from 'react';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
-import { Link, Redirect } from 'expo-router';
+import { Link } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 type Props = {
   id: string;
