@@ -1,4 +1,5 @@
-import { StyleSheet, View } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 import MyRadioButton from './MyRadioButton';
 
 type Props = {

@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
+import React, {useState} from 'react';
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from "expo-router";
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 export default function TelaDetalhesPet() {

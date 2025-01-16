@@ -5,7 +5,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
 import { FIREBASE_DB } from "../FirebaseConfig";
-import { setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import * as ImagePicker from "expo-image-picker";
 import {Image} from "expo-image"
 import * as FileSystem from 'expo-file-system';

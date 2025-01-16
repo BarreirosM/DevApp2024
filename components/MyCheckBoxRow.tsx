@@ -1,4 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import Checkbox from 'expo-checkbox';
 import MyCheckBox from './MyCheckBox';
 
 type Props = {
