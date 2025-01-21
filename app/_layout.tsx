@@ -8,12 +8,17 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Text, Pressable } from "react-native";
-import { Link, useGlobalSearchParams, useLocalSearchParams } from 'expo-router';
+import { Link, useGlobalSearchParams } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useState } from 'react';
+import { FIREBASE_AUTH } from '@/FirebaseConfig';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+
+  const [isAuth, setIsAuth] = useState(FIREBASE_AUTH.currentUser);
+
   const glob = useGlobalSearchParams();
 
   const [loaded, error] = useFonts({
@@ -85,6 +90,7 @@ export default function RootLayout() {
           name="cadastro" // This is the name of the page and must match the url from root
           options={({ navigation }) => ({
             title: "Cadastro",
+            drawerItemStyle: { display: 'none'},
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
@@ -106,6 +112,7 @@ export default function RootLayout() {
           name="cadastro-animal" // This is the name of the page and must match the url from root
           options={({ navigation }) => ({
             title: "Cadastro Animal",
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
             headerStyle: {
               backgroundColor: '#fee29b',
             },
@@ -176,10 +183,10 @@ export default function RootLayout() {
         />
 
         <Drawer.Screen
-          name="detalhes-pet" // This is the name of the page and must match the url from root
+          name="detalhes-pet"
           options={({ navigation }) => ({
             title: "Pequi",
-            //drawerItemStyle: { display: 'none' },
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
@@ -213,6 +220,7 @@ export default function RootLayout() {
           name="pets-adocao" // This is the name of the page and must match the url from root
           options={glob["pets-adotar"] ? {headerShown: false}  :({ navigation }) => ({
             title: "Adotar",
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
             headerStyle: {
               backgroundColor: '#fee29b',
             },
