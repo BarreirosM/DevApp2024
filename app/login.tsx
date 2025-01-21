@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Pressable, StatusBar, TextInput } from "react-n
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import {useState} from 'react';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
 
 export default function TelaLogin() {
@@ -41,6 +41,17 @@ export default function TelaLogin() {
       alert(`Login falhou ${login} ${pass} ${error.message}`);
     }
   }
+
+  const logout = async () => {
+    try {
+      const response = await signOut(auth);
+      alert(`Loginout deu certo`);
+    } catch (error: any) {
+      console.log(error);
+      alert(`Loginout falhou: ${error.message}`);
+    }
+  }
+
   if (auth.currentUser) {
     return (
       <View style={styles.container}>
@@ -55,6 +66,12 @@ export default function TelaLogin() {
         <Text style={[styles.introduction]}>
           Você já está logado no app.
         </Text>
+      </View>
+
+      <View style={[styles.buttonContainer, styles.loginButton]}>
+        <Pressable style={styles.button} onPress={logout}>
+          <Text style={styles.buttonLabel}>SAIR</Text>
+        </Pressable>
       </View>
 
       </View>
