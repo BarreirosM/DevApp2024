@@ -241,7 +241,7 @@ export default function TelaCadastroAnimal() {
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      quality: 1,
+      quality: 0.45,
     });
 
     if (!result.canceled) {

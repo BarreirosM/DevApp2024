@@ -15,7 +15,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/meau-icone.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "imageWidth": 200
       },
       "package": "com.barreirosm.devapp"
     },
