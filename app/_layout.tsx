@@ -66,6 +66,7 @@ export default function RootLayout() {
 
           options={({ navigation }) => ({ 
             title: 'Login', 
+            drawerItemStyle: { display: 'none' },
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
