@@ -37,7 +37,7 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer >
+      <Drawer>
         <Drawer.Screen 
           name="index" 
           
@@ -52,7 +52,7 @@ export default function RootLayout() {
             headerShadowVisible: false,
 
             headerLeft: () => 
-              <Pressable style={{padding: 12}}onPress={navigation.toggleDrawer}>
+              <Pressable style={{padding: 12}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
                 <Text>
                   <Entypo name="menu" size={30} color='#88c9bf' />
                 </Text>
@@ -66,6 +66,7 @@ export default function RootLayout() {
 
           options={({ navigation }) => ({ 
             title: 'Login', 
+            drawerItemStyle: { display: 'none' },
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
@@ -73,7 +74,7 @@ export default function RootLayout() {
             headerTintColor: '#434343',
 
             headerLeft: () => 
-              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
                 <Text>
                   <Entypo name="menu" size={24} color='#434343' />
                 </Text>

@@ -4,7 +4,9 @@ import Entypo from '@expo/vector-icons/Entypo';
 import {useState} from 'react';
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
+import { Link
 
+ } from "expo-router";
 export default function TelaLogin() {
 
   const auth = FIREBASE_AUTH;
@@ -69,9 +71,11 @@ export default function TelaLogin() {
       </View>
 
       <View style={[styles.buttonContainer, styles.loginButton]}>
-        <Pressable style={styles.button} onPress={logout}>
-          <Text style={styles.buttonLabel}>SAIR</Text>
-        </Pressable>
+        <Link href={"/"} asChild>
+          <Pressable style={styles.button} onPress={logout} >
+            <Text style={styles.buttonLabel}>SAIR</Text>
+          </Pressable>
+        </Link>
       </View>
 
       </View>
@@ -99,9 +103,11 @@ export default function TelaLogin() {
       </TextInput>
 
       <View style={[styles.buttonContainer, styles.loginButton]}>
-        <Pressable style={styles.button} onPress={signIn}>
-          <Text style={styles.buttonLabel}>ENTRAR</Text>
-        </Pressable>
+        <Link href={"/"} asChild>
+          <Pressable style={styles.button} onPress={signIn}>
+            <Text style={styles.buttonLabel}>ENTRAR</Text>
+          </Pressable>
+        </Link>
       </View>
 
       <View style={[styles.buttonContainer, styles.facebookButton]}>
