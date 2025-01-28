@@ -40,7 +40,7 @@ export default function TelaInicial() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Link href={isAuth ? "/cadastro-eba" : "/sem-cadastro"} asChild>
+        <Link href={isAuth ? "/chat" : "/sem-cadastro"} asChild>
           <Pressable style={styles.button} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
             <Text style={styles.buttonLabel}>AJUDAR</Text>
           </Pressable>

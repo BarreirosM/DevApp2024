@@ -5,8 +5,6 @@ import { Image } from 'expo-image';
 import { Link, Redirect } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 type Props = {
   id: string;
@@ -18,7 +16,7 @@ type Props = {
 };
 
 export default function MyPost({ id, nome, idade, porte, sexo, foto }: Props) {
-  
+  console.log(foto);
   return(
     <Link href={`/pets-adocao/${id}?nome=${nome}`} asChild>
       <Pressable style={styles.postContainer}>

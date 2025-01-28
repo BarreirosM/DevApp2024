@@ -52,7 +52,7 @@ export default function RootLayout() {
             headerShadowVisible: false,
 
             headerLeft: () => 
-              <Pressable style={{padding: 12}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
+              <Pressable style={{padding: 12}} onPressIn={navigation.toggleDrawer} onPress={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
                 <Text>
                   <Entypo name="menu" size={30} color='#88c9bf' />
                 </Text>
@@ -217,7 +217,7 @@ export default function RootLayout() {
           })}
         />
 
-<Drawer.Screen
+        <Drawer.Screen
           name="pets-adocao" // This is the name of the page and must match the url from root
           options={glob["pets-adotar"] ? {headerShown: false}  :({ navigation }) => ({
             title: "Adotar",
@@ -242,6 +242,40 @@ export default function RootLayout() {
                 </Pressable>
               </Link>,
 
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+
+        <Drawer.Screen 
+          name="chat" 
+
+          options={glob["conversas"] ? {headerShown: false}  : ({ navigation }) => ({ 
+            title: 'Chat', 
+            //drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+
+            headerTintColor: '#434343',
+
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+              </Pressable>,
+
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="search1" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
             headerTitleStyle: {
               fontFamily: 'Roboto_500Medium',
               fontSize: 20,
