@@ -5,8 +5,11 @@ import { Image } from 'expo-image';
 import { Link, Redirect } from 'expo-router';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 type Props = {
+  isMine?:boolean;
   id: string;
   nome: string;
   idade: string;
@@ -15,12 +18,12 @@ type Props = {
   foto: string;
 };
 
-export default function MyPost({ id, nome, idade, porte, sexo, foto }: Props) {
-  console.log(foto);
+export default function MyPost({ isMine , id, nome, idade, porte, sexo, foto }: Props) {
+  
   return(
-    <Link href={`/pets-adocao/${id}?nome=${nome}`} asChild>
+    <Link href={isMine ? `/meus-pets/${id}?nome=${nome}`:`/pets-adocao/${id}?nome=${nome}`} asChild>
       <Pressable style={styles.postContainer}>
-        <View style={styles.postHeader}>
+        <View style={[styles.postHeader, {backgroundColor: isMine ? '#cfe9e5' : '#fee29b'}]}>
           <Text style={styles.nomeAnimal}>
             {nome}
           </Text>
@@ -75,7 +78,6 @@ const styles = StyleSheet.create({
   postHeader: {
     flexDirection: 'row',
     height: 32,
-    backgroundColor: "#fee29b",
     borderTopLeftRadius:10,
     borderTopRightRadius:10,
     alignItems: 'center',

@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
-import { doc, getDoc } from "firebase/firestore";
+import MyPost from "@/components/MyPost";
+import { collection, doc, getDoc, getDocFromServer, getDocs, getDocsFromServer } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from "@/FirebaseConfig";
-import { useLocalSearchParams } from "expo-router";
+import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from "expo-router";
@@ -15,7 +16,7 @@ const db = FIREBASE_DB;
 export default function TelaDetalhesPet() {
 
   const local = useLocalSearchParams();
-  const petId = String(local["pets-adotar"]);
+  const petId = String(local["mine-pets"]);
   const [petData, setPetData] = useState<any>({
     nome: 'Erro',
     sexo: 'Erro',
@@ -47,22 +48,45 @@ export default function TelaDetalhesPet() {
     }
   });
   
+  useEffect (() => {
+    async function fetchPet() {
+      const docRef = doc(db, "Pets", petId)
+      const docSnap = await getDoc(docRef);
+      setPetData(docSnap.data());
+    }
+    fetchPet();
+  }, []);
+
+/*
   useEffect(() => {
     async function fetchPet() {
       const user = FIREBASE_AUTH.currentUser; 
-      if (user) {
-        const docRef = doc(db, "Pets", petId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          if (docSnap.data().adoção === true) {
-            setPetData(docSnap.data());
-          }
-        } 
-      } 
+      const docRef = doc(db, "Pets", petId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists() && docSnap.data().donoDoAnimal === user?.uid) {
+        setPetData(docSnap.data());
+      } else {
+        console.log("Pet não encontrado ou não pertence ao usuário");
+      }
     }
     fetchPet();
   }, [petId]);
-
+*/
+/*useEffect(() => {
+  async function fetchPet() {
+    const user = FIREBASE_AUTH.currentUser; 
+    if (user) {
+      const docRef = doc(db, "Pets", petId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        if (docSnap.data().donoDoAnimal === user.uid) {
+          setPetData(docSnap.data());
+        } 
+      } 
+    } 
+  }
+  fetchPet();
+}, [petId]);*/
 
   const nome: string = petData.nome || 'Erro';
   const sexo: string = petData.sexo;
@@ -99,7 +123,7 @@ export default function TelaDetalhesPet() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         
-      <StatusBar barStyle="light-content" backgroundColor="ffee29b"></StatusBar>
+      <StatusBar barStyle="light-content" backgroundColor="#cfe9e5"></StatusBar>
 
       <View style={styles.imageContainer}>
      
@@ -108,7 +132,7 @@ export default function TelaDetalhesPet() {
         <View style={[styles.editButton]}>
           <Link href={"/cadastro"} asChild>
             <Pressable style={styles.button} >
-            <MaterialIcons name="favorite-border" size={24} color="#434343" />
+            <MaterialIcons name="edit" size={24} color="#434343" />
             </Pressable>
           </Link>
         </View>
@@ -260,20 +284,25 @@ export default function TelaDetalhesPet() {
         borderColor: '#e0e0e0',
         borderTopWidth: 0.8,}}/>
 
-      <Text style={styles.subSubHeader}>
-        MAIS SOBRE PEQUI
-      </Text>
-
       <Text style={[styles.regularText, {marginHorizontal: 24}]}>
         {sobre}
       </Text>
-      
-      <View style={[styles.buttonContainer, ]}>
-        <Pressable style={styles.button} >
-          <Text style={styles.buttonLabel}>
-            PRETENDO ADOTAR
-          </Text>
-        </Pressable>
+
+      <View style={styles.rowButtons}>
+        <View style={[styles.buttonContainer, ]}>
+          <Pressable style={styles.button} >
+            <Text style={styles.buttonLabel}>
+              VER INTERESSADOS
+            </Text>
+          </Pressable>
+        </View>
+        <View style={[styles.buttonContainer, ]}>
+          <Pressable style={styles.button} >
+            <Text style={styles.buttonLabel}>
+              REMOVER PET
+            </Text>
+          </Pressable>
+        </View>
       </View>
     
       </ScrollView>
@@ -332,7 +361,7 @@ const styles = StyleSheet.create({
   subSubHeader: {
     fontFamily: 'Roboto_400Regular',
     fontSize: 12,
-    color: "#f7a800",
+    color: "#cfe9e5",
     marginTop: 16,
     marginLeft: 16,
     //marginBottom: 16,
@@ -366,8 +395,9 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     marginVertical: 28,
+    marginRight:12,
     backgroundColor: "#FDCF58",
-    width: 232,
+    width: 142,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
