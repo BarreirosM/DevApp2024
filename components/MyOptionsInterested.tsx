@@ -65,7 +65,7 @@ export default function MyOptionsInterested({ isVisible,  onClose, nome, nomePet
                 </Pressable>
               </View>
               <View style={[styles.buttonContainer, styles.vcButton]}>
-                <Link href={`/chat/${id}?nome=${nome}&&chatID?=${chatID}&&otherID?=${userID}`} asChild>
+                <Link href={`/chat/${userID}?nome=${nome}&&chatID?=${chatID}`} asChild>
                   <Pressable style={styles.button} onPressIn={comecarChat} onPress={onClose}>
                     <Text style={styles.buttonLabel}>
                       CHAT
