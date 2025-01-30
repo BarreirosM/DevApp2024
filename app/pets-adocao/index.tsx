@@ -1,29 +1,44 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
 import MyPost from "@/components/MyPost";
-import { collection, getDocs } from "firebase/firestore";
-import { FIREBASE_DB } from "@/FirebaseConfig";
+import { collection, getDocs, query, where, collectionGroup,doc } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH} from "@/FirebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const windowWidth = Dimensions.get('window').width;
 
 const db = FIREBASE_DB;
+const auth = FIREBASE_AUTH;
 
-async function fetchData() {
+/*async function fetchData() {
   const data: {id: string}[] = [];
   const querySnapshot = await getDocs(collection(db, "Pets"));
   querySnapshot.forEach((doc) => {
     data.push({id: doc.id, ...doc.data()});
   });
   return data;
-}
+}*/
+async function fetchData(uid: string) {
+  const data: { id: string }[] = [];
+  const q = query(collection(db, "Pets"), where("adoção", "==", true));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+}  
 
 export default function TelaAdotarAnimal() {
 
   const [userData, setUserData] = useState<any>([]);
-  useEffect (() => {
+
+  useEffect(() => {
     async function fetchPet() {
-      const data = await fetchData();
-      setUserData(data);
+      const user = FIREBASE_AUTH.currentUser; 
+      if (user) {
+        const data = await fetchData(user.uid); 
+        setUserData(data);
+      }
     }
     fetchPet();
   }, []);
@@ -35,7 +50,7 @@ export default function TelaAdotarAnimal() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {userData.map((user: any) => (
-          <MyPost key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal} />
+          <MyPost isMine={false} key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal} />
       ))}
     </ScrollView>
   </View>

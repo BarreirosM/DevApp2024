@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from "firebase/firestore";
-import { FIREBASE_DB } from "@/FirebaseConfig";
+import { FIREBASE_DB, FIREBASE_AUTH } from "@/FirebaseConfig";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -47,14 +47,21 @@ export default function TelaDetalhesPet() {
     }
   });
   
-  useEffect (() => {
+  useEffect(() => {
     async function fetchPet() {
-      const docRef = doc(db, "Pets", petId)
-      const docSnap = await getDoc(docRef);
-      setPetData(docSnap.data());
+      const user = FIREBASE_AUTH.currentUser; 
+      if (user) {
+        const docRef = doc(db, "Pets", petId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          if (docSnap.data().adoção === true) {
+            setPetData(docSnap.data());
+          }
+        } 
+      } 
     }
     fetchPet();
-  }, []);
+  }, [petId]);
 
 
   const nome: string = petData.nome || 'Erro';

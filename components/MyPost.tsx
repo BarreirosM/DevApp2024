@@ -23,7 +23,7 @@ export default function MyPost({ isMine , id, nome, idade, porte, sexo, foto }: 
   return(
     <Link href={isMine ? `/meus-pets/${id}?nome=${nome}`:`/pets-adocao/${id}?nome=${nome}`} asChild>
       <Pressable style={styles.postContainer}>
-        <View style={[styles.postHeader, {backgroundColor: isMine ? '#cfe9e5' : 'fee29b'}]}>
+        <View style={[styles.postHeader, {backgroundColor: isMine ? '#cfe9e5' : '#fee29b'}]}>
           <Text style={styles.nomeAnimal}>
             {nome}
           </Text>
