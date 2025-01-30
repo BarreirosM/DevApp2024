@@ -3,44 +3,49 @@ import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Dimensions } from "react-native";
 import { Link } from 'expo-router';
+import MyOptionsInterested from './MyOptionsInterested';
+
 
 const windowWidth = Dimensions.get('window').width;
 const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 type Props = {
   id: number;
-  id_user: string;
+  userID: string;
   nome: string;
-  mensagem?: string;
+  idade: number;
   foto: string;
-  chatID: string;
+  petID: string;
 };
 
-export default function MyContacts({ id, id_user, nome, mensagem='oi', foto, chatID}: Props) {
+export default function Interested({ id, userID, nome, idade, foto, petID}: Props) {
 
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const onModalOpen = () => {
+    setIsModalVisible(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const nomePet = 'Pequi'
   return(
     <View style={[styles.perfil]}>
-      <Link href={`/chat/${id_user}?nome=${nome}&&chatID?=${chatID}`} asChild>
-        <Pressable style={styles.perfilPressable}>
+      <Pressable style={styles.perfilPressable} onPress={onModalOpen}>
 
-          <Image source={{ uri: foto }} style={styles.fotoPerfil} contentFit="cover"/>
-
-          <View style={styles.textoPerfil}>
-          
-              <Text style={styles.textoNome}>
-              {nome.toUpperCase()} | PEQUI
-              </Text>
-              <Text style={id === 1 ? styles.textoPrimeiraMensagem : styles.textoOutrasMensagem}>
-              {mensagem}
-              </Text>
-          </View>
-
-          <Text style={styles.hora}>
-              00:00
-          </Text>
-
-        </Pressable>
-      </Link>
+        <Image source={{ uri: foto }} style={styles.fotoPerfil} contentFit="cover"/>
+        
+        <Text style={styles.texto}>
+          {nome}
+        </Text>
+        
+        <Text style={styles.texto}>
+          {idade} anos
+        </Text>
+      </Pressable>
+      <MyOptionsInterested isVisible={isModalVisible} onClose={onModalClose} nome={nome} nomePet={nomePet} userID={userID} petID={petID}>
+      </MyOptionsInterested>
     </View>
   );
 }
@@ -48,7 +53,6 @@ export default function MyContacts({ id, id_user, nome, mensagem='oi', foto, cha
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fafafa",
   },
@@ -59,31 +63,28 @@ const styles = StyleSheet.create({
 
   fotoPerfil: {
     maxWidth: 1000,
-    maxHeight: 511,
-    borderRadius: 200,
-    width: (48 * windowWidth) / 360,
-    height: (48 * windowWidth) / 360,
+    maxHeight: 1000,
+    borderRadius: 1000,
+    width: (84 * windowWidth) / 360,
+    height: (84 * windowWidth) / 360,
+    marginBottom: (8 * windowWidth) / 360,
   },
 
   perfil: {
-    width: windowWidth,
+    width: (156 * windowWidth) / 360,
     borderBottomColor: "#e6e7e8",
-    borderBottomWidth: (0.8 * windowWidth) / 360,
   },
 
   perfilPressable: {
     width: '100%',
-    height: (80 * windowWidth) / 360,
-    //backgroundColor: 'red',
     alignItems: 'center',
-    flexDirection: 'row',
-    padding: (16 * windowWidth) / 360,
+    paddingVertical: (12 * windowWidth) / 360,
   },
 
-  textoNome: {
+  texto: {
     fontFamily: 'Roboto_400Regular',
-    fontSize: 12,
-    color: "#88c9bf",
+    fontSize: 14,
+    color: "#434343",
   },
 
   textoPrimeiraMensagem: {

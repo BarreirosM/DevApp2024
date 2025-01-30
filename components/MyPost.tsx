@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
@@ -16,7 +15,7 @@ type Props = {
 };
 
 export default function MyPost({ id, nome, idade, porte, sexo, foto }: Props) {
-  console.log(foto);
+  //console.log(foto);
   return(
     <Link href={`/pets-adocao/${id}?nome=${nome}`} asChild>
       <Pressable style={styles.postContainer}>
