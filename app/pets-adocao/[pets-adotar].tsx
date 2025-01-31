@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Pressable, StatusBar, ScrollView, Dimensions } from "react-native";
 import { useEffect, useState } from 'react';
-import { doc, getDoc } from "firebase/firestore";
+
+import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+
 import { FIREBASE_DB, FIREBASE_AUTH } from "@/FirebaseConfig";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
@@ -94,8 +96,30 @@ export default function TelaDetalhesPet() {
   exigencias += petData.exigencias.termosDeAdoção ? 'Termos de adoção. ' : '';
   exigencias += petData.exigencias.visitaPrévia ? 'Visita prévia. ' : '';
 
+
+  const pretendoAdotar = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const respons = await updateDoc(docAux, {
+          adotar: arrayUnion(doc(db, 'Pets', petId)),
+        });
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
+    }
+  }
+
   return (
     <View style={styles.container}>
+
+      <StatusBar barStyle="light-content" backgroundColor="#ffd358"></StatusBar>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         
@@ -269,7 +293,7 @@ export default function TelaDetalhesPet() {
       </Text>
       
       <View style={[styles.buttonContainer, ]}>
-        <Pressable style={styles.button} >
+        <Pressable style={styles.button} onPress={pretendoAdotar}>
           <Text style={styles.buttonLabel}>
             PRETENDO ADOTAR
           </Text>

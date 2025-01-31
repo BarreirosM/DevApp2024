@@ -1,37 +1,89 @@
 import { StyleSheet, Text, View, Pressable, StatusBar } from "react-native";
-import { Image } from 'expo-image';
 import { ScrollView } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
-import { FIREBASE_DB } from "@/FirebaseConfig";
+import { collection, getDocs, query, where, getDoc ,doc } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH} from "@/FirebaseConfig";
 import MyContacts from "@/components/MyContacts";
 import { useState, useEffect } from "react";
 
 const windowWidth = Dimensions.get('window').width;
-const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 const db = FIREBASE_DB;
 
-async function fetchData() {
-  const data: {id: string}[] = [];
-  const querySnapshot = await getDocs(collection(db, "Usuarios"));
+async function fetchDataChats(uid: string) {
+  const data: { id: string }[] = [];
+  const q = query(collection(db, "Chats"), where("donoDoAnimal", "==", uid));
+  const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    data.push({id: doc.id, ...doc.data()});
+    data.push({ id: doc.id, ...doc.data() });
   });
+  return data;
+}   
+
+async function fetchDataChats2(uid: string) {
+  const data: { id: string }[] = [];
+  const q = query(collection(db, "Chats"), where("interessadoNoAnimal", "==", uid));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+}   
+
+async function fetchDataUsers(dataAux: any) {
+  const data: { id: string }[] = [];
+  for(let i = 0; i < dataAux.length; i++) {
+    const user = await getDoc(doc(db, `Usuarios/${dataAux[i].interessadoNoAnimal}`))
+    data.push({ id: user.id, ...user.data() });
+  };
+  return data;
+}
+
+async function fetchDataUsers2(dataAux: any) {
+  const data: { id: string }[] = [];
+  for(let i = 0; i < dataAux.length; i++) {
+    const user = await getDoc(doc(db, `Usuarios/${dataAux[i].donoDoAnimal}`))
+    data.push({ id: user.id, ...user.data() });
+  };
+  return data;
+}
+
+async function fetchDataPets(dataAux: any) {
+  const data: { id: string }[] = [];
+  for(let i = 0; i < dataAux.length; i++) {
+    const user = await getDoc(doc(db, `Pets/${dataAux[i].animal}`))
+    data.push({ id: user.id, ...user.data() });
+  };
   return data;
 }
 
 export default function TelaMeusChats() {
 
   let id = 0;
+  let chatID = '';
   const idPlus = () => id = id + 1;
+  const [chatData, setChatData] = useState<any>([]);
   const [userData, setUserData] = useState<any>([]);
-  useEffect (() => {
-    async function fetchPet() {
-      const data = await fetchData();
-      setUserData(data);
+  const [petsData, setPetsData] = useState<any>([]);
+
+  useEffect(() => {
+    async function fetchChats() {
+      const user = FIREBASE_AUTH.currentUser; 
+      if (user) {
+        const chatDataAux = await fetchDataChats(user.uid); 
+        setChatData(chatDataAux)
+        const userDataAux = await fetchDataUsers(chatDataAux);
+        setUserData(userDataAux);
+        const chatDataAux2 = await fetchDataChats2(user.uid); 
+        setChatData(chatData => [...chatData, ...chatDataAux2])
+        console.log(chatDataAux2)
+        const userDataAux2 = await fetchDataUsers2(chatDataAux2);
+        setUserData(userData => [...userData, ...userDataAux2]);
+        const petsDataAux = await fetchDataPets(chatData);
+        setPetsData(petsDataAux);
+      }
     }
-    fetchPet();
+    fetchChats();
   }, []);
 
   return (
@@ -40,8 +92,8 @@ export default function TelaMeusChats() {
       <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
-      {userData.map((user: any) => (
-        <MyContacts key={user.id} id={idPlus()} id_user={user.id} nome={user.nome} foto={user.foto} />
+      {userData.map((user, index) => (
+        <MyContacts key={user.id} id={idPlus()} id_user={user.id} nome={user.nome} foto={user.foto} chatID={chatData[index].id}/>
       ))}
 
       </ScrollView>

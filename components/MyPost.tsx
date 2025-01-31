@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import { StyleSheet, View, Text, Dimensions, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from 'expo-image';
@@ -17,6 +16,7 @@ type Props = {
   sexo:string;
   foto: string;
 };
+
 
 export default function MyPost({ isMine , id, nome, idade, porte, sexo, foto }: Props) {
   
