@@ -283,6 +283,37 @@ export default function RootLayout() {
           })}
         />
 
+        <Drawer.Screen
+          name="meus-pets" // This is the name of the page and must match the url from root
+          options={glob["mine-pets"] ? {headerShown: false}  :({ navigation }) => ({
+            title: "Meus Pets",
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+            headerTintColor: '#434343', 
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+             </Pressable >,
+
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
+                  <Text>
+                    <AntDesign name="search1" size={24} color="#434343" />
+                  </Text>
+                </Pressable>
+              </Link>,
+
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
+
       </Drawer>
     </GestureHandlerRootView>
   );

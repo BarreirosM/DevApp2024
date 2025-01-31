@@ -18,17 +18,29 @@ const auth = FIREBASE_AUTH;
   });
   return data;
 }*/
+
 async function fetchData(uid: string) {
   const data: { id: string }[] = [];
-  const q = query(collection(db, "Pets"), where("adoção", "==", true));
+  const donoDoAnimalRef = doc(db, `Usuarios/${uid}`);
+  const q = query(collection(db, "Pets"), where("donoDoAnimal", "==", donoDoAnimalRef));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     data.push({ id: doc.id, ...doc.data() });
   });
   return data;
-}  
+}     
+
 
 export default function TelaAdotarAnimal() {
+
+  /*const [userData, setUserData] = useState<any>([]);
+  useEffect (() => {
+    async function fetchPet() {
+      const data = await fetchData();
+      setUserData(data);
+    }
+    fetchPet();
+  }, []);*/
 
   const [userData, setUserData] = useState<any>([]);
 
@@ -46,11 +58,11 @@ export default function TelaAdotarAnimal() {
   return (
     <View style={styles.container}>
 
-      <StatusBar barStyle="light-content" backgroundColor="#ffd358"></StatusBar>
+      <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {userData.map((user: any) => (
-          <MyPost isMine={false} key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal} />
+          <MyPost isMine={true} key={user.id} id={user.id} nome={user.nome} idade={user.idade} sexo={user.sexo} porte={user.porte} foto={user.fotoAnimal} />
       ))}
     </ScrollView>
   </View>
@@ -104,7 +116,7 @@ const styles = StyleSheet.create({
   postHeader: {
     flexDirection: 'row',
     height: 32,
-    backgroundColor: "#fee29b",
+    backgroundColor: "#cfe9e5",
     borderTopLeftRadius:10,
     borderTopRightRadius:10,
     alignItems: 'center',
