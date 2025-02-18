@@ -41,6 +41,29 @@ export default function MyOptionsInterested({ isVisible,  onClose, nome, nomePet
     }
   }
 
+  const db = FIREBASE_DB;
+  let petId = '';
+
+  const salvarNuvem = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const respons = await updateDoc(docAux, {
+          animais: arrayUnion(doc(db, 'Pets', petId)),
+        });
+        //console.log(respons);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
+    }
+  }
+
   return (
     <Modal animationType='slide'
     transparent={true} visible={isVisible}>
