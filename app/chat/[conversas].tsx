@@ -41,7 +41,6 @@ export default function Chat() {
     async function getMessages() {
         const aux = await getDoc(doc(db, `Chats/${chatID}`));
         const men = {id: aux.id, ...aux.data()}
-        console.log(men.mensagens)
         setMessages(
             men.mensagens.reverse().map(doc => ({
                 _id: doc._id,
