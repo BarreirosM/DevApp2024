@@ -17,7 +17,8 @@
         "foregroundImage": "./assets/images/meau-icone.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.barreirosm.devapp"
+      "package": "com.barreirosm.devapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -47,6 +48,7 @@
       "eas": {
         "projectId": "c6d75c08-b266-4ca1-9e7a-238212c5acda"
       }
-    }
+    },
+    "owner": "trabalhodevapp"
   }
 }
