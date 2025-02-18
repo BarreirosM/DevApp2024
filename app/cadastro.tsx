@@ -96,9 +96,10 @@ export default function TelaCadastro() {
               endereço: address,
             },
             animais: [],
+            adotar: [],
+            favoritos: [],
           })
           alert(`Salvar deu certo`);
-    
         } catch (error: any) {
           console.log(error);
           alert(`Salvar falhou ${error.message}`);
