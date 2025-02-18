@@ -40,7 +40,7 @@ app-example
 android
 ios
 
-package.json
+package-lock.json
 yarn.lock
 
 
