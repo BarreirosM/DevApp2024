@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1095731359782",
+    "project_id": "my-expo-app-ad",
+    "storage_bucket": "my-expo-app-ad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095731359782:android:72748f5066e2adfa05b6e7",
+        "android_client_info": {
+          "package_name": "com.barreirosm.devapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095731359782-a61dsoacrtdgbhua7c8pkhn7l6bja78g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.barreirosm.devapp",
+            "certificate_hash": "692f54a93b13cba4f09dc181ed8ec272945bb9d7"
+          }
+        },
+        {
+          "client_id": "1095731359782-2vb4e1p3dbgvp41plel8t14945u9lkes.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBan479d5BHVmo1BDSe7UYeJMtSRgcPNkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095731359782-2vb4e1p3dbgvp41plel8t14945u9lkes.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
