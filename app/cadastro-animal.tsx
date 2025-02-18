@@ -211,6 +211,7 @@ export default function TelaCadastroAnimal() {
           },
           sobreAnimal: texto,
           donoDoAnimal: doc(db, 'Usuarios', FIREBASE_AUTH.currentUser.uid),
+          adoção: true,
         })
         petId = response.id,
         //console.log(response);
