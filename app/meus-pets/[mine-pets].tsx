@@ -121,9 +121,9 @@ export default function TelaDetalhesPet() {
   return (
     <View style={styles.container}>
 
+      <StatusBar barStyle="light-content" backgroundColor="#88c9bf"></StatusBar>
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
-        
-      <StatusBar barStyle="light-content" backgroundColor="#cfe9e5"></StatusBar>
 
       <View style={styles.imageContainer}>
      
@@ -287,14 +287,17 @@ export default function TelaDetalhesPet() {
       <Text style={[styles.regularText, {marginHorizontal: 24}]}>
         {sobre}
       </Text>
-
+      
+      
       <View style={styles.rowButtons}>
         <View style={[styles.buttonContainer, ]}>
-          <Pressable style={styles.button} >
-            <Text style={styles.buttonLabel}>
-              VER INTERESSADOS
-            </Text>
-          </Pressable>
+          <Link href={`/meus-pets/interessados?id=${petId}`} asChild>
+            <Pressable style={styles.button} >
+              <Text style={styles.buttonLabel}>
+                VER INTERESSADOS
+              </Text>
+            </Pressable>
+          </Link>
         </View>
         <View style={[styles.buttonContainer, ]}>
           <Pressable style={styles.button} >
@@ -396,7 +399,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 28,
     marginRight:12,
-    backgroundColor: "#FDCF58",
+    backgroundColor: "#88c9bf",
     width: 142,
     height: 40,
     alignItems: 'center',

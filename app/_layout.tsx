@@ -20,7 +20,6 @@ export default function RootLayout() {
   const [isAuth, setIsAuth] = useState(FIREBASE_AUTH.currentUser);
 
   const glob = useGlobalSearchParams();
-
   const [loaded, error] = useFonts({
     Roboto_500Medium, Roboto_400Regular, Courgette_400Regular
   });
@@ -254,7 +253,7 @@ export default function RootLayout() {
 
           options={glob["conversas"] ? {headerShown: false}  : ({ navigation }) => ({ 
             title: 'Chat', 
-            //drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
@@ -284,9 +283,10 @@ export default function RootLayout() {
         />
 
         <Drawer.Screen
-          name="meus-pets" // This is the name of the page and must match the url from root
-          options={glob["mine-pets"] ? {headerShown: false}  :({ navigation }) => ({
+          name="meus-pets"
+          options={(glob["mine-pets"]||glob["id"]) ? {headerShown: false}  :({ navigation }) => ({
             title: "Meus Pets",
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
             headerStyle: {
               backgroundColor: '#cfe9e5',
             },
