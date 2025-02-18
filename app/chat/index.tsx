@@ -76,7 +76,6 @@ export default function TelaMeusChats() {
         setUserData(userDataAux);
         const chatDataAux2 = await fetchDataChats2(user.uid); 
         setChatData(chatData => [...chatData, ...chatDataAux2])
-        console.log(chatDataAux2)
         const userDataAux2 = await fetchDataUsers2(chatDataAux2);
         setUserData(userData => [...userData, ...userDataAux2]);
         const petsDataAux = await fetchDataPets(chatData);
@@ -93,7 +92,7 @@ export default function TelaMeusChats() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
       {userData.map((user, index) => (
-        <MyContacts key={user.id} id={idPlus()} id_user={user.id} nome={user.nome} foto={user.foto} chatID={chatData[index].id}/>
+        <MyContacts key={chatData[index].id} id={idPlus()} id_user={user.id} nome={user.nome} foto={user.foto} chatID={chatData[index].id} petID={chatData[index].animal}/>
       ))}
 
       </ScrollView>

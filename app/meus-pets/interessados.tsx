@@ -33,16 +33,16 @@ export default function TelaInteressados() {
   let id = 0;
   const idPlus = () => id = id + 1;
   const local = useLocalSearchParams();
+  const petId = String(local["id"]);
   const [userData, setUserData] = useState<any>([]);
   useEffect (() => {
     async function fetchPet() {
-      const data = await fetchData(local.id);
+      const data = await fetchData(petId);
       setUserData(data);
     }
     fetchPet();
   }, []);
   const db = FIREBASE_DB;
-  let petId = '';
 
 
 
@@ -55,7 +55,7 @@ export default function TelaInteressados() {
         <View style={styles.perfis}>
           {userData.map((user: any,) => {
             return (
-                <Interested key={user.id} id={idPlus()} userID={user.id} nome={user.nome} foto={user.foto} idade={user.idade} petID={'2xvFOrcM4uwOUb1LbiN2'} />
+                <Interested key={user.id} id={idPlus()} userID={user.id} nome={user.nome} foto={user.foto} idade={user.idade} petID={petId} />
               
           )})}
         </View>
