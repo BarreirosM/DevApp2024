@@ -1,7 +1,7 @@
 import { Modal, View, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { PropsWithChildren } from 'react';
 import { FIREBASE_AUTH, FIREBASE_DB } from '@/FirebaseConfig';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { Link } from 'expo-router';
 
 const db = FIREBASE_DB;
@@ -16,6 +16,15 @@ type Props = PropsWithChildren<{
   userID: string;
   petID: string;
 }>;
+
+async function deleteData(petId: string) {
+  const data: { id: string }[] = [];
+  const q = query(collection(db, "Chats"), where("animal", "==", petId));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((document) => async () => {
+    const response = await deleteDoc(doc(db, "Chats", document.id))
+  });
+}     
 
 export default function MyOptionsInterested({ isVisible,  onClose, nome, nomePet, userID, petID }: Props) {
 
@@ -41,6 +50,58 @@ export default function MyOptionsInterested({ isVisible,  onClose, nome, nomePet
     }
   }
 
+  const trocaAceita = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const docAux1 = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const docAux2 = doc(db, "Usuarios", userID);
+        const docAux3 = doc(db, 'Pets', petID);
+        const response1 = await updateDoc(docAux2, {
+          animais: arrayUnion(docAux3),
+          adotar: arrayRemove(docAux3),
+        });
+        const response2 = await updateDoc(docAux1, {
+          animais: petID,
+        });
+        const response3 = await updateDoc(docAux3, {
+          donoDoAnimal: docAux2,
+          adoção: false,
+        });
+        deleteData(petID);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
+    }
+  }
+
+  const trocaNegada = async () => {
+    if (FIREBASE_AUTH.currentUser){
+      try {
+        const docAux1 = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        const docAux2 = doc(db, "Usuarios", userID);
+        const docAux3 = doc(db, 'Pets', petID);
+        const response1 = await updateDoc(docAux2, {
+          adotar: arrayRemove(docAux3),
+        });
+        //console.log(respons);
+        alert(`Atrualizar deu certo`);
+
+      } catch (error: any) {
+        console.log(error);
+        alert(`Salvar falhou ${error.message}`);
+      }
+    }
+    else {
+      alert("Usuario não está logado.")
+    }
+  }
+
   return (
     <Modal animationType='slide'
     transparent={true} visible={isVisible}>
@@ -51,14 +112,14 @@ export default function MyOptionsInterested({ isVisible,  onClose, nome, nomePet
             </Text>
             <View style={styles.buttonsContainer}>
               <View style={[styles.buttonContainer, styles.vcButton]}>
-                <Pressable style={styles.button} onPress={onClose}>
+                <Pressable style={styles.button} onPressIn={trocaAceita} onPress={onClose}>
                   <Text style={styles.buttonLabel}>
                     ACEITAR
                   </Text>
                 </Pressable>
               </View>
               <View style={[styles.buttonContainer, styles.rmButton]}>
-                <Pressable style={styles.button} onPress={onClose}>
+                <Pressable style={styles.button} onPress={onClose}onPressIn={trocaNegada}>
                   <Text style={styles.buttonLabel}>
                     RECUSAR
                   </Text>
