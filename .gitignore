@@ -40,7 +40,7 @@ app-example
 android
 ios
 
-package.json
+package-lock.json
 yarn.lock
 
 my-expo-app-ad-firebase-adminsdk-zoauw-5431956543.json

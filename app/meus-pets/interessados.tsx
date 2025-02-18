@@ -5,16 +5,25 @@ import { addDoc, arrayUnion, collection, doc, getDocs, updateDoc } from "firebas
 import { FIREBASE_AUTH, FIREBASE_DB } from "@/FirebaseConfig";
 import { useState, useEffect } from "react";
 import Interested from "@/components/Interested";
+import { useLocalSearchParams } from "expo-router";
 
 const windowWidth = Dimensions.get('window').width;
 
 const db = FIREBASE_DB;
 
-async function fetchData() {
+async function fetchData(localId: string) {
   const data: {id: string}[] = [];
   const querySnapshot = await getDocs(collection(db, "Usuarios"));
   querySnapshot.forEach((doc) => {
-    data.push({id: doc.id, ...doc.data()});
+    const auxArray = doc.data().adotar
+    if(auxArray) {
+      for(let i in auxArray){
+        if(auxArray[i] === localId){
+          
+          data.push({id: doc.id, ...doc.data()});
+        }
+      }
+    }
   });
   return data;
 }
@@ -23,18 +32,17 @@ export default function TelaInteressados() {
 
   let id = 0;
   const idPlus = () => id = id + 1;
-
+  const local = useLocalSearchParams();
+  const petId = String(local["id"]);
   const [userData, setUserData] = useState<any>([]);
   useEffect (() => {
     async function fetchPet() {
-      const data = await fetchData();
+      const data = await fetchData(petId);
       setUserData(data);
     }
     fetchPet();
   }, []);
-
   const db = FIREBASE_DB;
-  let petId = '';
 
 
 
@@ -47,7 +55,7 @@ export default function TelaInteressados() {
         <View style={styles.perfis}>
           {userData.map((user: any,) => {
             return (
-                <Interested key={user.id} id={idPlus()} userID={user.id} nome={user.nome} foto={user.foto} idade={user.idade} petID={'2xvFOrcM4uwOUb1LbiN2'} />
+                <Interested key={user.id} id={idPlus()} userID={user.id} nome={user.nome} foto={user.foto} idade={user.idade} petID={petId} />
               
           )})}
         </View>

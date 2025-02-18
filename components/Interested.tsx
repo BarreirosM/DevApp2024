@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Dimensions } from "react-native";
 import { Link } from 'expo-router';
 import MyOptionsInterested from './MyOptionsInterested';
+import { doc, getDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/FirebaseConfig';
 
 
 const windowWidth = Dimensions.get('window').width;
-const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
+const db = FIREBASE_DB;
 
 type Props = {
   id: number;
@@ -17,6 +19,12 @@ type Props = {
   foto: string;
   petID: string;
 };
+
+async function fetchDataPet(petId: any) {
+  const pet = await getDoc(doc(db, `Pets/${petId}`))
+  const petNome = pet.data().nome;
+  return petNome;
+}
 
 export default function Interested({ id, userID, nome, idade, foto, petID}: Props) {
 
@@ -29,7 +37,20 @@ export default function Interested({ id, userID, nome, idade, foto, petID}: Prop
     setIsModalVisible(false);
   };
 
-  const nomePet = 'Pequi'
+  const [pet, setPetData] = useState<any>([]);
+
+  useEffect(() => {
+    async function fetchChats() {
+      const user = FIREBASE_AUTH.currentUser; 
+      if (user) {
+        const petDataAux = await fetchDataPet(petID); 
+        setPetData(petDataAux)
+      }
+    }
+    fetchChats();
+  }, []);
+  
+  const nomePet = pet
   return(
     <View style={[styles.perfil]}>
       <Pressable style={styles.perfilPressable} onPress={onModalOpen}>

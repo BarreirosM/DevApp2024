@@ -30,7 +30,6 @@ export default function RootLayout() {
   const [isAuth, setIsAuth] = useState(FIREBASE_AUTH.currentUser);
 
   const glob = useGlobalSearchParams();
-
   const [loaded, error] = useFonts({
     Roboto_500Medium, Roboto_400Regular, Courgette_400Regular
   });
@@ -242,68 +241,69 @@ export default function RootLayout() {
                   <Text>
                     <Entypo name="menu" size={24} color='#434343' />
                   </Text>
-              </Pressable >,
+                </Pressable>
+              </Link>,
 
-              headerRight: () => 
-                <Link href="/cadastro-animal" asChild>
-                  <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
-                    <Text>
-                      <AntDesign name="search1" size={24} color="#434343" />
-                    </Text>
-                  </Pressable>
-                </Link>,
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
 
-              headerTitleStyle: {
-                fontFamily: 'Roboto_500Medium',
-                fontSize: 20,
-              },
-            })}
-          />
+        <Drawer.Screen 
+          name="chat" 
 
-          <Drawer.Screen 
-            name="chat" 
+          options={glob["conversas"] ? {headerShown: false}  : ({ navigation }) => ({ 
+            title: 'Chat', 
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
 
-            options={glob["conversas"] ? {headerShown: false}  : ({ navigation }) => ({ 
-              title: 'Chat', 
-              //drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
-              headerStyle: {
-                backgroundColor: '#cfe9e5',
-              },
+            headerTintColor: '#434343',
 
-              headerTintColor: '#434343',
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+              </Pressable>,
 
-              headerLeft: () => 
-                <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer} onPressIn={() => setIsAuth(FIREBASE_AUTH.currentUser)}>
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
                   <Text>
                     <Entypo name="menu" size={24} color='#434343' />
                   </Text>
-                </Pressable>,
+                </Pressable>
+              </Link>,
+            headerTitleStyle: {
+              fontFamily: 'Roboto_500Medium',
+              fontSize: 20,
+            },
+          })}
+        />
 
-              headerRight: () => 
-                <Link href="/cadastro-animal" asChild>
-                  <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
-                    <Text>
-                      <AntDesign name="search1" size={24} color="#434343" />
-                    </Text>
-                  </Pressable>
-                </Link>,
-              headerTitleStyle: {
-                fontFamily: 'Roboto_500Medium',
-                fontSize: 20,
-              },
-            })}
-          />
+        <Drawer.Screen
+          name="meus-pets"
+          options={(glob["mine-pets"]||glob["id"]) ? {headerShown: false}  :({ navigation }) => ({
+            title: "Meus Pets",
+            drawerItemStyle: { display: isAuth ? 'flex' : 'none' },
+            headerStyle: {
+              backgroundColor: '#cfe9e5',
+            },
+            headerTintColor: '#434343', 
+            headerLeft: () => 
+              <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+                <Text>
+                  <Entypo name="menu" size={24} color='#434343' />
+                </Text>
+             </Pressable >,
 
-          <Drawer.Screen
-            name="meus-pets" // This is the name of the page and must match the url from root
-            options={glob["mine-pets"] ? {headerShown: false}  :({ navigation }) => ({
-              title: "Meus Pets",
-              headerStyle: {
-                backgroundColor: '#cfe9e5',
-              },
-              headerTintColor: '#434343', 
-              headerLeft: () => 
-                <Pressable style={{paddingRight: 16, paddingLeft: 12,}} onPress={navigation.toggleDrawer}>
+            headerRight: () => 
+              <Link href="/cadastro-animal" asChild>
+                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
                   <Text>
                     <Entypo name="menu" size={24} color='#434343' />
                   </Text>
