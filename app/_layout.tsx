@@ -241,8 +241,8 @@ export default function RootLayout() {
                   <Text>
                     <Entypo name="menu" size={24} color='#434343' />
                   </Text>
-                </Pressable>
-              </Link>,
+                </Pressable>,
+              
 
             headerTitleStyle: {
               fontFamily: 'Roboto_500Medium',
@@ -301,13 +301,6 @@ export default function RootLayout() {
                 </Text>
              </Pressable >,
 
-            headerRight: () => 
-              <Link href="/cadastro-animal" asChild>
-                <Pressable style={{paddingRight: 16, paddingLeft: 12,}}>
-                  <Text>
-                    <Entypo name="menu" size={24} color='#434343' />
-                  </Text>
-              </Pressable >,
 
               headerRight: () => 
                 <Link href="/cadastro-animal" asChild>

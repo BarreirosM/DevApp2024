@@ -8,11 +8,18 @@ import { useLocalSearchParams } from "expo-router";
 import { Image } from 'expo-image';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from "expo-router";
+import { sendPushNotification } from "@/utils/sendPushNotifications";
 
 const windowWidth = Dimensions.get('window').width;
 const PlaceholderImage = require('@/assets/images/cachorro_placeholder.jpg');
 
 const db = FIREBASE_DB;
+
+interface Usuario {
+  nome: string;
+  email: string;
+  expoPushToken?: string; 
+}
 
 export default function TelaDetalhesPet() {
 
@@ -97,7 +104,7 @@ export default function TelaDetalhesPet() {
   exigencias += petData.exigencias.visitaPrévia ? 'Visita prévia. ' : '';
 
 
-  const pretendoAdotar = async () => {
+  /*const pretendoAdotar = async () => {
     if (FIREBASE_AUTH.currentUser){
       try {
         const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
@@ -114,7 +121,55 @@ export default function TelaDetalhesPet() {
     else {
       alert("Usuario não está logado.")
     }
-  }
+  }*/
+
+  const pretendoAdotar = async () => {
+    if (FIREBASE_AUTH.currentUser) {
+      try {
+        // 1. Atualizar o Firestore com o interesse na adoção
+        const userRef = doc(FIREBASE_DB, "Usuarios", FIREBASE_AUTH.currentUser.uid);
+        await updateDoc(userRef, {
+          adotar: arrayUnion(petId),
+        });
+  
+        // 2. Obter o documento do pet
+        const petDocRef = doc(FIREBASE_DB, "Pets", petId);
+        const petDocSnap = await getDoc(petDocRef);
+  
+        if (petDocSnap.exists()) {
+          // 3. Verificar se o donoDoAnimal é uma referência
+          const donoRef = petDocSnap.data().donoDoAnimal;
+  
+          if (donoRef) {
+            // 4. Acessar o documento do dono
+            const donoDocSnap = await getDoc(donoRef);
+  
+            if (donoDocSnap.exists()) {
+              // 5. Usar a interface Usuario para tipar os dados
+              const donoData = donoDocSnap.data() as Usuario;
+              const donoToken = donoData.expoPushToken;
+              console.log(donoToken)
+  
+              // 6. Enviar a notificação push 
+              if (donoToken) {
+                await sendPushNotification(donoToken, {
+                  title: "Meau App",
+                  body: `${FIREBASE_AUTH.currentUser.email} está interessado em adotar ${petData.nome}.`,
+                });
+              }
+            }
+          }
+        }
+  
+        alert("Interesse em adoção registrado com sucesso!");
+      } catch (error: any) {
+        console.log(error);
+        alert(`Erro ao salvar interesse: ${error.message}`);
+      }
+    } else {
+      alert("Usuário não está logado.");
+    }
+  };
 
   return (
     <View style={styles.container}>
