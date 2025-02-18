@@ -4,9 +4,10 @@ import Entypo from '@expo/vector-icons/Entypo';
 import {useState} from 'react';
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from '../FirebaseConfig'
-import { Link
-
- } from "expo-router";
+import { Link} from "expo-router";
+import { doc, setDoc } from "firebase/firestore";
+import { FIREBASE_DB } from "@/FirebaseConfig";
+import { registerForPushNotificationsAsync } from "@/utils/registerForPushNotificationsAsync";
 export default function TelaLogin() {
 
   const auth = FIREBASE_AUTH;
@@ -34,13 +35,32 @@ export default function TelaLogin() {
     setIsFocused(prev => [prev[0], false]); 
   }; 
 
-  const signIn = async () => {
+  /*const signIn = async () => {
     try {
       const response = await signInWithEmailAndPassword(auth, login, pass);
       alert(`Login deu certo ${login} ${pass}`);
     } catch (error: any) {
       console.log(error);
       alert(`Login falhou ${login} ${pass} ${error.message}`);
+    }
+  }*/
+  const signIn = async () => {
+    try {
+      // 1. Fazer login
+      const response = await signInWithEmailAndPassword(auth, login, pass);
+      alert(`Login deu certo ${login} ${pass}`);
+  
+      // 2. Obter o token de notificação
+      const token = await registerForPushNotificationsAsync();
+      if (token) {
+        // 3. Armazenar o token no Firestore
+        const userRef = doc(FIREBASE_DB, "Usuarios", response.user.uid);
+        await setDoc(userRef, { expoPushToken: token }, { merge: true });
+        console.log("Token salvo no Firestore!");
+      }
+    } catch (error: any) {
+      console.log(error);
+      alert(`Login falhou: ${error.message}`);
     }
   }
 
