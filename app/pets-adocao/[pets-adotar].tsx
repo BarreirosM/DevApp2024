@@ -102,7 +102,7 @@ export default function TelaDetalhesPet() {
       try {
         const docAux = doc(db, "Usuarios", FIREBASE_AUTH.currentUser.uid);
         const respons = await updateDoc(docAux, {
-          adotar: arrayUnion(doc(db, 'Pets', petId)),
+          adotar: arrayUnion(petId),
         });
         alert(`Atrualizar deu certo`);
 
